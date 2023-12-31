@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cria um analise</title>
+    </head>
+    <body>
+      <h1>Formulario de criação de uma análise</h1>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div>
+              {{message}}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+          {% if field.name == "lbc_type" %}
+          <div>
+            <label for="{{ field.id_for_label }}" >{{field.label}}</label>
+            {{ field }} {{form.lbc_value}}
+          </div>
+          {% elif field.name == "rbc_type"%}
+          <div>
+            <label for="{{ field.id_for_label }}" >{{field.label}}</label>
+            {{ field }} {{form.rbc_value}}
+          </div>
+          {% elif field.name != "rbc_value" and  field.name != "lbc_value"%}
+          <div>
+            <label for="{{ field.id_for_label }}" >{{field.label}}</label>
+            {{ field }}
+          </div>
+          {% endif %}
+        {% endfor %}
+
+        <div>
+          <button type="submit">Criando um analise</button>
+        </div>
+      </form>
+
+    </body>
+</html>

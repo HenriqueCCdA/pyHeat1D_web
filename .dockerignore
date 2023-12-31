@@ -1,0 +1,7 @@
+.venv
+LICENSE
+.env
+.ruff_cache
+.git
+.env_samples
+docker-compose.yml

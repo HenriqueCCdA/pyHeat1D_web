@@ -1,0 +1,92 @@
+[tool.poetry]
+name = "pyheat1dweb"
+version = "0.1.0"
+description = "Aplicação fullstack do pyheat1d"
+authors = ["Henrique C. C. de Andrade <henrique.ccda@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0"
+django-extensions = "^3.2.3"
+gunicorn = "^21.2.0"
+psycopg2 = "^2.9.9"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.6.0"
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+ipython = "^8.19.0"
+ipdb = "^0.13.13"
+black = "^23.12.1"
+ruff = "^0.1.9"
+taskipy = "^1.12.2"
+coverage = "^7.4.0"
+pytest-django = "^4.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 120
+exclude = '''
+/(
+      \.eggs
+    | \.git
+    | \.venv
+)/
+'''
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "pyheat1d_web.settings"
+addopts = "-ra -vv"
+
+markers=[
+    "unity: marks unity tests",
+    "integration: marks integration testes",
+]
+
+[tool.ruff]
+line-length = 120
+
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+
+exclude = [
+    ".venv"
+]
+
+src = ["src"]
+
+
+[tool.taskipy.variables]
+src = "pyheat1d_web"
+
+[tool.taskipy.tasks]
+fmt_black = {cmd="poetry run black {src}", help="Chamando do black.", use_vars = true}
+fmt_ruff= {cmd="poetry run ruff {src} --fix", help="Chamando do ruff.", use_vars = true}
+fmt = {cmd="task fmt_ruff && task fmt_black", help="Formatador do código."}
+
+lin_ruff = {cmd="poetry run ruff check {src}", help="Linter com o Ruff.", use_vars = true}
+linter = {cmd="task lin_ruff", help="Linter."}
+
+tests = {cmd="pytest", help="Rodando os testes."}
+tests_cov = {cmd="pytest --cov-report html --cov={src}", help="Rodando os testes com cobertura.", use_vars = true}
+
+server_coverage = {cmd="python -m http.server 8001 -d htmlcov", help="Mostrando o relatorio de cobertura de teste."}
+
+clean = {cmd="rm -rvf .ruff_cache && rm -v .coverage && rm -rfv .pytest_cache && rm -rvf htmlcov && find mk_burger -name '*.pyc' -exec rm -vf {} \\;", help="Limpa o projeto."}
+
+# db = {cmd="docker compose up database -d", help="Subindo o contanier do DB."}
+
+# server_prod = {cmd="gunicorn pyheat1d_web.wsgi --workers 3 --bind localhost:8000 --log-file=-  --access-logfile=-", help="Subindo gunicorn"}

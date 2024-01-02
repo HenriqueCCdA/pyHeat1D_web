@@ -60,13 +60,12 @@ def create_analysis_form(request):
 
 
 def run_analysis(request, pk):
-
     sim = Simulation.objects.get(id=pk)
     sim.status = Simulation.Size.RUNNING
     try:
         run_simulation(input_file=Path(sim.input_file))
     except Exception as e:
-        print(e) # #TODO: logar
+        print(e)  # #TODO: logar
         sim.status = Simulation.Size.FAILED
     else:
         sim.status = Simulation.Size.SUCCESS
@@ -124,13 +123,13 @@ def analysis_detail(request, pk):
     initial_conditions = {"Temperatuta Inicial": case["initialt"]}
 
     context = {
-            "data": data,
-            "props": props,
-            "bcs": bcs,
-            "geom": geom,
-            "temporal_dist": temporal_dist,
-            "initial_conditions": initial_conditions,
-        }
+        "data": data,
+        "props": props,
+        "bcs": bcs,
+        "geom": geom,
+        "temporal_dist": temporal_dist,
+        "initial_conditions": initial_conditions,
+    }
 
     return render(request, "core/analysis_detail.html", context=context)
 

@@ -1,11 +1,13 @@
 from django.conf import settings
 from django.db import models
 
+
 class CustomManager(models.Manager):
     def delete(self):
         breakpoint()
         for obj in self.get_queryset():
             obj.delete()
+
 
 class Simulation(models.Model):
     class Size(models.TextChoices):
@@ -22,4 +24,3 @@ class Simulation(models.Model):
 
     def __str__(self):
         return f"<Tag={self.tag}, Status={self.get_status_display()}>"
-

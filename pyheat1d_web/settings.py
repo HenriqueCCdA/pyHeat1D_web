@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     #
     "django_extensions",
     #
-    "pyheat1d_web.core.apps",
+    "pyheat1d_web.core",
 ]
 
 MIDDLEWARE = [
@@ -41,7 +41,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [Path("templates")],
-        "APP_DIRS": False,
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",

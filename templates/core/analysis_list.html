@@ -16,13 +16,16 @@
         </tr>
         {% for a in analysis%}
         <tr>
-          <td>{{a}}</td>
+          <td>{{a.tag}}</td>
           <td>
-            <form action="{% url 'core:run_analysis' tag=a %}">
+            <form action="{% url 'core:run_analysis' pk=a.pk %}">
               <button type="submit">Roda analise</button>
             </form>
-            <form action="{% url 'core:analysis_detail' tag=a %}">
+            <form action="{% url 'core:analysis_detail' pk=a.pk %}">
               <button type="submit">Ver</button>
+            </form>
+            <form action="{% url 'core:analysis_delete' pk=a.pk %}">
+              <button type="submit">Deletar</button>
             </form>
           </td>
         </tr>

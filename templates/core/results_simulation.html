@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cria um analise</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+      <div>
+        <canvas id="plot_area"></canvas>
+      </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+      endpoint = "/api/results/{{ id }}"
+
+      $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data) {
+          plot(data);
+        },
+        error: function(error_data) {
+          console.log(error_data);
+        }
+      })
+
+      function plot(data) {
+
+        const ctx = document.getElementById('plot_area');
+        const configs = {
+            scales: {
+              x: {
+                beginAtZero: true
+              },
+              y: {
+                beginAtZero: true
+              },
+            },
+        }
+
+        const graph_data = {
+            labels: data.mesh,
+            datasets: data.steps.map(element => {
+                return {
+                  label: `Tempo ${element.t}`,
+                  data: element.u,
+                  borderWidth: 1
+                }
+            })
+          }
+        new Chart(ctx, {
+          type: 'line',
+          data: graph_data,
+          options:configs,
+        });
+      }
+    </script>
+</html>

@@ -1,9 +1,10 @@
 import json
+from functools import partial
 from pathlib import Path
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, resolve_url
 from pyheat1d.controllers import run as run_simulation
 
@@ -61,14 +62,14 @@ def create_analysis_form(request):
 
 def run_analysis(request, pk):
     sim = Simulation.objects.get(id=pk)
-    sim.status = Simulation.Size.RUNNING
+    sim.status = Simulation.Status.RUNNING
     try:
         run_simulation(input_file=Path(sim.input_file))
     except Exception as e:
         print(e)  # #TODO: logar
-        sim.status = Simulation.Size.FAILED
+        sim.status = Simulation.Status.FAILED
     else:
-        sim.status = Simulation.Size.SUCCESS
+        sim.status = Simulation.Status.SUCCESS
     finally:
         sim.save()
 
@@ -155,3 +156,40 @@ def analysis_delete(request, pk):
     sim.delete()
 
     return HttpResponseRedirect(resolve_url("core:analysis_list"))
+
+
+# TODO: limitar ao metodo GET
+def get_simulation_results_api(request, pk):
+    sim = Simulation.objects.get(id=pk)
+
+    input_file = Path(sim.input_file)
+
+    base_dir = input_file.parent
+
+    graphs = {}
+
+    if sim.status == Simulation.Status.SUCCESS:
+        mesh_file = base_dir / "mesh.json"
+        mesh = json.load(mesh_file.open())
+        results_file = base_dir / "results.json"
+        results = json.load(results_file.open())
+
+        graphs["mesh"] = list(map(partial(round, ndigits=2), mesh["xp"]))
+        graphs["steps"] = [
+            {
+                "step": results[0]["istep"],
+                "t": results[0]["t"],
+                "u": results[0]["u"],
+            },
+            {
+                "step": results[-1]["istep"],
+                "t": results[-1]["t"],
+                "u": results[-1]["u"],
+            },
+        ]
+
+    return JsonResponse(graphs)
+
+
+def simulation_results(request, pk):
+    return render(request, "core/results_simulation.html", context={"id": pk})

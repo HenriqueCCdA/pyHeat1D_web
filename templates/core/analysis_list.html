@@ -27,6 +27,9 @@
             <form action="{% url 'core:analysis_delete' pk=a.pk %}">
               <button type="submit">Deletar</button>
             </form>
+            <form action="{% url 'core:simulation_results' pk=a.pk %}">
+              <button type="submit">Resultados</button>
+            </form>
           </td>
         </tr>
         {% endfor %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lista de analise</title>
+    </head>
+    <body>
+      <h1>Lista de análises</h1>
+
+      <table>
+        <tr>
+          <th>tag</th>
+          <th>acao</th>
+        </tr>
+        {% for a in analysis%}
+        <tr>
+          <td>{{a.tag}}</td>
+          <td>
+            <form action="{% url 'core:run_analysis' pk=a.pk %}">
+              <button type="submit">Roda analise</button>
+            </form>
+            <form action="{% url 'core:analysis_detail' pk=a.pk %}">
+              <button type="submit">Ver</button>
+            </form>
+            <form action="{% url 'core:analysis_delete' pk=a.pk %}">
+              <button type="submit">Deletar</button>
+            </form>
+            <form action="{% url 'core:simulation_results' pk=a.pk %}">
+              <button type="submit">Resultados</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <a href="{% url "core:create_analysis_form" %}"> Criar nova analise </a>
+    </body>
+</html>

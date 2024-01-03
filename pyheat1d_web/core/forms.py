@@ -29,39 +29,40 @@ class NewAnalysisForm(forms.ModelForm):
     )
     initialt = forms.FloatField(
         label="Temperatura Inicial",
-        initial=1.0,
+        initial=100.0,
     )
-    prop_k = forms.FloatField(
-        label="Coeficiente de difusão",
-        initial=1.0,
-    )
-    prop_ro = forms.FloatField(
-        label="Calor especifico",
-        initial=1.0,
-    )
-    prop_cp = forms.FloatField(
-        label="Criando um analise",
-        initial=1.0,
-    )
+    # prop_k = forms.FloatField(
+    #     label="Coeficiente de difusão",
+    #     initial=1.0,
+    # )
+    # prop_ro = forms.FloatField(
+    #     label="Calor especifico",
+    #     initial=1.0,
+    # )
+    # prop_cp = forms.FloatField(
+    #     label="Criando um analise",
+    #     initial=1.0,
+    # )
 
-    lbc_type = forms.ChoiceField(
-        label="Tipo condição de contorno a Esquerda",
-        required=False,
-        choices=BC_TYPES,
-    )
+    # lbc_type = forms.ChoiceField(
+    #     label="Tipo condição de contorno a Esquerda",
+    #     required=False,
+    #     choices=BC_TYPES,
+    # )
 
     lbc_value = forms.FloatField(
-        label="Valor da condição de contorno a Esquerda",
+        label="Temperatura a esquerda",
         initial=10.0,
     )
 
-    rbc_type = forms.ChoiceField(
-        label="Tipo condição de contorno a Direita",
-        required=False,
-        choices=BC_TYPES,
-    )
+    # rbc_type = forms.ChoiceField(
+    #     label="Tipo condição de contorno a Direita",
+    #     required=False,
+    #     choices=BC_TYPES,
+    # )
+
     rbc_value = forms.FloatField(
-        label="Valor da condição de contorno a Direita",
+        label="Temperatura a direita",
         initial=20.0,
     )
 

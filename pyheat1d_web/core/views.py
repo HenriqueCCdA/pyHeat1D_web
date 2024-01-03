@@ -29,19 +29,12 @@ def create_analysis_form(request):
 
         tag = new_case.pop("tag")
 
-        del new_case["lbc_type"]
-        del new_case["rbc_type"]
-
         bcs = {
             "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
             "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
         }
 
-        props = {
-            "k": new_case.pop("prop_k"),
-            "ro": new_case.pop("prop_ro"),
-            "cp": new_case.pop("prop_cp"),
-        }
+        props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
 
         new_case.update(bcs)
         new_case.update({"prop": props})

@@ -31,39 +31,12 @@
           {% endif %}
         </div>
 
-        <form class="row" method="post">
+        <form class="row " method="post">
           {% csrf_token %}
           {% for field in form.visible_fields %}
-            {% if field.name == "lbc_type" %}
             <div class="mb-3 row">
               <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}" >{{field.label}}</label>
-              <div class="col-sm-10">
-                <!-- {{ field }} {{form.lbc_value}} -->
-                {{form.lbc_value}}
-              </div>
-              {% if field.errors %}
-              <div class="alert alert-danger">
-                {{ field.errors }}
-              </div>
-              {% endif %}
-            </div>
-            {% elif field.name == "rbc_type"%}
-            <div class="mb-3 row">
-              <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}" >{{field.label}}</label>
-              <!-- {{ field }} {{form.rbc_value}} -->
-              <div class="col-sm-10">
-                {{form.rbc_value}}
-              </div>
-              {% if field.errors %}
-              <div class="alert alert-danger">
-                {{ field.errors }}
-              </div>
-              {% endif %}
-            </div>
-            {% elif field.name != "rbc_value" and  field.name != "lbc_value"%}
-            <div class="mb-3 row">
-              <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}" >{{field.label}}</label>
-              <div class="col-sm-10">
+              <div class="col-sm-2">
                 {{ field }}
               </div>
               {% if field.errors %}
@@ -72,9 +45,7 @@
               </div>
               {% endif %}
             </div>
-            {% endif %}
           {% endfor %}
-
           <div>
             <button class="btn btn-primary" type="submit">Criando um analise</button>
           </div>

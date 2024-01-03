@@ -17,7 +17,7 @@ def create_analysis_form(request):
         form = NewAnalysisForm(request.POST)
 
         if not form.is_valid():
-            messages.success(request, "Erro na hora da criação da simulação.")
+            messages.error(request, "Erro na hora da criação da simulação.")
             return render(
                 request,
                 "core/create_analysis_form.html",
@@ -29,9 +29,12 @@ def create_analysis_form(request):
 
         tag = new_case.pop("tag")
 
+        del new_case["lbc_type"]
+        del new_case["rbc_type"]
+
         bcs = {
-            "lbc": {"type": int(new_case.pop("lbc_type")), "params": {"value": new_case.pop("lbc_value")}},
-            "rbc": {"type": int(new_case.pop("rbc_type")), "params": {"value": new_case.pop("rbc_value"), "h": 1.0}},
+            "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
+            "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
         }
 
         props = {
@@ -64,8 +67,10 @@ def run_analysis(request, pk):
     sim = Simulation.objects.get(id=pk)
     sim.status = Simulation.Status.RUNNING
     try:
+        messages.info(request, "Rodando a analise")
         run_simulation(input_file=Path(sim.input_file))
     except Exception as e:
+        messages.error(request, e)
         print(e)  # #TODO: logar
         sim.status = Simulation.Status.FAILED
     else:
@@ -174,16 +179,22 @@ def get_simulation_results_api(request, pk):
         results_file = base_dir / "results.json"
         results = json.load(results_file.open())
 
+        n_steps = len(results)
         graphs["mesh"] = list(map(partial(round, ndigits=2), mesh["xp"]))
         graphs["steps"] = [
             {
                 "step": results[0]["istep"],
-                "t": results[0]["t"],
+                "t": round(results[0]["t"], 2),
                 "u": results[0]["u"],
             },
             {
+                "step": results[n_steps // 2]["istep"],
+                "t": round(results[n_steps // 2]["t"], 2),
+                "u": results[n_steps // 2]["u"],
+            },
+            {
                 "step": results[-1]["istep"],
-                "t": results[-1]["t"],
+                "t": round(results[-1]["t"], 2),
                 "u": results[-1]["u"],
             },
         ]

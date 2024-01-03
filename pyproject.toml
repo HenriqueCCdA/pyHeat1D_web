@@ -12,7 +12,7 @@ django = "^5.0"
 django-extensions = "^3.2.3"
 gunicorn = "^21.2.0"
 psycopg2 = "^2.9.9"
-pyheat1d = {path = "pyheat1d-0.1.0-py3-none-any.whl"}
+pyheat1d = {git = "https://github.com/HenriqueCCdA/pyHeat1D"}
 
 
 [tool.poetry.group.dev.dependencies]

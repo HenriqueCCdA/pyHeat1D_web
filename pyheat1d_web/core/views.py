@@ -37,7 +37,7 @@ def create_analysis_form(request):
         props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
 
         new_case.update(bcs)
-        new_case.update({"prop": props})
+        new_case.update({"prop": props, "write_every_steps": 100})
 
         analisys_folder = Path(settings.MEDIA_ROOT) / tag
         if not analisys_folder.exists():
@@ -59,6 +59,7 @@ def create_analysis_form(request):
 def run_analysis(request, pk):
     sim = Simulation.objects.get(id=pk)
     sim.status = Simulation.Status.RUNNING
+    sim.save()
     try:
         messages.info(request, "Rodando a analise")
         run_simulation(input_file=Path(sim.input_file))
@@ -103,9 +104,9 @@ def analysis_detail(request, pk):
     }
 
     props = {
-        "Coeficiente de difusção": case["prop"]["k"],
-        "Massa específico": case["prop"]["ro"],
-        "Calor específico": case["prop"]["cp"],
+        # "Coeficiente de difusção": case["prop"]["k"],
+        # "Massa específico": case["prop"]["ro"],
+        # "Calor específico": case["prop"]["cp"],
     }
 
     bcs = {
@@ -172,24 +173,14 @@ def get_simulation_results_api(request, pk):
         results_file = base_dir / "results.json"
         results = json.load(results_file.open())
 
-        n_steps = len(results)
         graphs["mesh"] = list(map(partial(round, ndigits=2), mesh["xp"]))
         graphs["steps"] = [
             {
-                "step": results[0]["istep"],
-                "t": round(results[0]["t"], 2),
-                "u": results[0]["u"],
-            },
-            {
-                "step": results[n_steps // 2]["istep"],
-                "t": round(results[n_steps // 2]["t"], 2),
-                "u": results[n_steps // 2]["u"],
-            },
-            {
-                "step": results[-1]["istep"],
-                "t": round(results[-1]["t"], 2),
-                "u": results[-1]["u"],
-            },
+                "step": results[i]["istep"],
+                "t": round(results[i]["t"], 2),
+                "u": results[i]["u"],
+            }
+            for i in [0, 1, -1]
         ]
 
     return JsonResponse(graphs)

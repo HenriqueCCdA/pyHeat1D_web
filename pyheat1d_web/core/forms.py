@@ -17,15 +17,15 @@ class NewAnalysisForm(forms.ModelForm):
     )
     ndiv = forms.IntegerField(
         label="Numero de divisões",
-        initial=10_000,
+        initial=100_000,
     )
     dt = forms.FloatField(
         label="Passo de Tempo",
-        initial=1.0,
+        initial=0.0001,
     )
     nstep = forms.IntegerField(
         label="Número de Passos",
-        initial=100,
+        initial=10_000,
     )
     initialt = forms.FloatField(
         label="Temperatura Inicial",
@@ -52,7 +52,7 @@ class NewAnalysisForm(forms.ModelForm):
 
     lbc_value = forms.FloatField(
         label="Temperatura a esquerda",
-        initial=10.0,
+        initial=0.0,
     )
 
     # rbc_type = forms.ChoiceField(
@@ -63,7 +63,7 @@ class NewAnalysisForm(forms.ModelForm):
 
     rbc_value = forms.FloatField(
         label="Temperatura a direita",
-        initial=20.0,
+        initial=0.0,
     )
 
     class Meta:

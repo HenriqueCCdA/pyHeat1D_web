@@ -1110,19 +1110,20 @@ version = "0.1.0"
 description = ""
 optional = false
 python-versions = ">=3.10,<3.12"
-files = [
-    {file = "pyheat1d-0.1.0-py3-none-any.whl", hash = "sha256:06cc45825d2ae7eb7bd1880a741091e15714ce558e0f2b36b7ac2bca2a91be1e"},
-]
+files = []
+develop = false
 
 [package.dependencies]
-matplotlib = ">=3.8.2,<4.0.0"
-numpy = ">=1.26.1,<2.0.0"
-rich = ">=13.6.0,<14.0.0"
-typer = ">=0.9.0,<0.10.0"
+matplotlib = "^3.8.2"
+numpy = "^1.26.1"
+rich = "^13.6.0"
+typer = "^0.9.0"
 
 [package.source]
-type = "file"
-url = "pyheat1d-0.1.0-py3-none-any.whl"
+type = "git"
+url = "https://github.com/HenriqueCCdA/pyHeat1D"
+reference = "HEAD"
+resolved_reference = "9f85b7e809c209c51ab9584dabe1df5ca928e52e"
 
 [[package]]
 name = "pyparsing"
@@ -1485,4 +1486,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "8ebf959d90dadb47e662f4c425d86b8a0d7cbd9c6d90d902926cfd9ba758901d"
+content-hash = "4151112e24e6c6c96447527e8219afec789391617f6e086df2154f5f915f9e13"

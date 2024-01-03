@@ -4,79 +4,58 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <title>Detalhe</title>
     </head>
     <body>
-      <h2>Infos</h2>
-      <table>
-        {% for k, v in data.items %}
-        <tr>
-          <td>{{ k }}</td>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-      </table>
+      <div class="container">
+        <div class="row">
+          <div class="col">
 
-      <h2> Geometria </h2>
-      <table>
-        {% for k, v in geom.items %}
-        <tr>
-          <td>{{ k }}</td>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-      <h2> Distetização temporal </h2>
-      <table>
-        {% for k, v in temporal_dist.items %}
-        <tr>
-          <td>{{ k }}</td>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-      <h2> Propriedades </h2>
-      <table>
-        {% for k, v in props.items %}
-        <tr>
-          <td>{{ k }}</td>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-      <h2> Condições iniciais </h2>
-      <table>
-        <tr>
-          <th>Campo</th>
-          <th>Valor</th>
-        </tr>
-        {% for k, v in initial_conditions.items %}
-        <tr>
-          <td>{{ k }}</td>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-
-      <h2> Condição de contorno </h2>
-      <table>
-        <tr>
-          <th>Campo</th>
-          <th>Valor</th>
-        </tr>
-        {% for k, v in bcs.items %}
-          <td> {{ k }}
-          {% for k1, v1 in v.items %}
-          {{ v1 }}
-          {% endfor %}
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-      <a href="{% url 'core:analysis_list' %}"> Lista de Simulações </a>
+            <h4 class="text-center">Infos da Simulação</h3>
+            <table class="table table-borderless">
+              {% for k, v in data.items %}
+              <tr>
+                <th>{{ k }}</th>
+                <td>{{ v }}</td>
+              </tr>
+              {% endfor %}
+              {% for k, v in geom.items %}
+              <tr>
+                <th>{{ k }}</th>
+                <td>{{ v }}</td>
+              </tr>
+              {% endfor %}
+              {% for k, v in temporal_dist.items %}
+              <tr>
+                <th>{{ k }}</th>
+                <td>{{ v }}</td>
+              </tr>
+              {% endfor %}
+              {% for k, v in props.items %}
+              <tr>
+                <th>{{ k }}</th>
+                <td>{{ v }}</td>
+              </tr>
+              {% endfor %}
+              {% for k, v in initial_conditions.items %}
+              <tr>
+                <th>{{ k }}</th>
+                <td>{{ v }} °C</td>
+              </tr>
+              {% endfor %}
+              {% for k, v in bcs.items %}
+                <th class=""> Condição de contorno a {{ k }} </th>
+                <td>
+                  {{ v.params.value }} °C
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+            <a class="btn btn-primary" href="{% url 'core:analysis_list' %}"> Lista de Simulações </a>
+          </div>
+        </div>
+      </div>
     </body>
 </html>

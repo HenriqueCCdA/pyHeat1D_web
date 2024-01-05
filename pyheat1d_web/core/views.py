@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, resolve_url
 from pyheat1d.controllers import run as run_simulation
+from pyheat1d.singleton import Singleton
 
 from .forms import BC_TYPES, NewAnalysisForm
 from .models import Simulation
@@ -61,7 +62,7 @@ def run_analysis(request, pk):
     sim.status = Simulation.Status.RUNNING
     sim.save()
     try:
-        messages.info(request, "Rodando a analise")
+        Singleton._instances = {}  # TODO: Gambirra para pode fazer funcionar
         run_simulation(input_file=Path(sim.input_file))
     except Exception as e:
         messages.error(request, e)

@@ -9,13 +9,13 @@ from django.shortcuts import render, resolve_url
 from pyheat1d.controllers import run as run_simulation
 from pyheat1d.singleton import Singleton
 
-from .forms import BC_TYPES, NewAnalysisForm
+from .forms import BC_TYPES, EditSimulationForm, NewSimulationForm
 from .models import Simulation
 
 
 def create_analysis_form(request):
     if request.method == "POST":
-        form = NewAnalysisForm(request.POST)
+        form = NewSimulationForm(request.POST)
 
         if not form.is_valid():
             messages.error(request, "Erro na hora da criação da simulação.")
@@ -52,7 +52,7 @@ def create_analysis_form(request):
 
         return HttpResponseRedirect(resolve_url("core:analysis_list"))
     else:
-        form = NewAnalysisForm()
+        form = NewSimulationForm()
 
     return render(request, "core/create_analysis_form.html", context={"form": form})
 
@@ -189,3 +189,52 @@ def get_simulation_results_api(request, pk):
 
 def simulation_results(request, pk):
     return render(request, "core/results_simulation.html", context={"id": pk})
+
+
+def edit_analysis_form(request, pk):
+    sim = Simulation.objects.get(id=pk)
+    if request.method == "POST":
+        form = EditSimulationForm(request.POST)
+
+        if not form.is_valid():
+            messages.error(request, "Erro na hora da criação da simulação.")
+            return render(
+                request,
+                "core/create_analysis_form.html",
+                context={"form": form},
+                status=400,
+            )
+
+        new_case = form.cleaned_data.copy()
+
+        bcs = {
+            "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
+            "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
+        }
+
+        props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
+
+        new_case.update(bcs)
+        new_case.update({"prop": props, "write_every_steps": 100})
+
+        case_file = Path(sim.input_file)
+
+        json.dump(new_case, case_file.open(mode="w"), indent=2)
+
+        return HttpResponseRedirect(resolve_url("core:analysis_list"))
+    else:
+        case_file = Path(sim.input_file)
+
+        case_old = json.load(case_file.open())
+        case_edit = {
+            "length": case_old["length"],
+            "ndiv": case_old["ndiv"],
+            "dt": case_old["dt"],
+            "nstep": case_old["nstep"],
+            "initialt": case_old["initialt"],
+            "lbc_value": case_old["lbc"]["params"]["value"],
+            "rbc_value": case_old["rbc"]["params"]["value"],
+        }
+        form = EditSimulationForm(case_edit)
+
+    return render(request, "core/edit_simulation_form.html", context={"form": form, "tag": sim.tag})

@@ -6,14 +6,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, resolve_url
-from pyheat1d.controllers import run as run_simulation
+from pyheat1d.controllers import run as run_simulation_cli
 from pyheat1d.singleton import Singleton
 
 from .forms import BC_TYPES, EditSimulationForm, NewSimulationForm
 from .models import Simulation
 
 
-def create_analysis_form(request):
+def create_simulation_form(request):
     if request.method == "POST":
         form = NewSimulationForm(request.POST)
 
@@ -21,7 +21,7 @@ def create_analysis_form(request):
             messages.error(request, "Erro na hora da criação da simulação.")
             return render(
                 request,
-                "core/create_analysis_form.html",
+                "core/create_simulation_form.html",
                 context={"form": form},
                 status=400,
             )
@@ -50,20 +50,20 @@ def create_analysis_form(request):
 
         Simulation.objects.create(tag=tag, input_file=case_file)
 
-        return HttpResponseRedirect(resolve_url("core:analysis_list"))
+        return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
         form = NewSimulationForm()
 
-    return render(request, "core/create_analysis_form.html", context={"form": form})
+    return render(request, "core/create_simulation_form.html", context={"form": form})
 
 
-def run_analysis(request, pk):
+def run_simulation(request, pk):
     sim = Simulation.objects.get(id=pk)
     sim.status = Simulation.Status.RUNNING
     sim.save()
     try:
         Singleton._instances = {}  # TODO: Gambirra para pode fazer funcionar
-        run_simulation(input_file=Path(sim.input_file))
+        run_simulation_cli(input_file=Path(sim.input_file))
     except Exception as e:
         messages.error(request, e)
         print(e)  # #TODO: logar
@@ -73,15 +73,15 @@ def run_analysis(request, pk):
     finally:
         sim.save()
 
-    return HttpResponseRedirect(resolve_url("core:analysis_list"))
+    return HttpResponseRedirect(resolve_url("core:list_simulation"))
 
 
-def analysis_list(request):
+def list_simulation(request):
     sim = Simulation.objects.all()
-    return render(request, "core/analysis_list.html", context={"analysis": sim})
+    return render(request, "core/list_simulation.html", context={"analysis": sim})
 
 
-def analysis_detail(request, pk):
+def detail_simulation(request, pk):
     sim = Simulation.objects.get(id=pk)
     case_file = Path(sim.input_file)
 
@@ -132,10 +132,10 @@ def analysis_detail(request, pk):
         "initial_conditions": initial_conditions,
     }
 
-    return render(request, "core/analysis_detail.html", context=context)
+    return render(request, "core/detail_simulation.html", context=context)
 
 
-def analysis_delete(request, pk):
+def delete_simulation(request, pk):
     sim = Simulation.objects.get(id=pk)
     input_file = Path(sim.input_file)
 
@@ -155,7 +155,7 @@ def analysis_delete(request, pk):
 
     sim.delete()
 
-    return HttpResponseRedirect(resolve_url("core:analysis_list"))
+    return HttpResponseRedirect(resolve_url("core:list_simulation"))
 
 
 # TODO: limitar ao metodo GET
@@ -191,7 +191,7 @@ def simulation_results(request, pk):
     return render(request, "core/results_simulation.html", context={"id": pk})
 
 
-def edit_analysis_form(request, pk):
+def edit_simulation_form(request, pk):
     sim = Simulation.objects.get(id=pk)
     if request.method == "POST":
         form = EditSimulationForm(request.POST)
@@ -200,7 +200,7 @@ def edit_analysis_form(request, pk):
             messages.error(request, "Erro na hora da criação da simulação.")
             return render(
                 request,
-                "core/create_analysis_form.html",
+                "core/create_simulation_form.html",
                 context={"form": form},
                 status=400,
             )
@@ -221,7 +221,7 @@ def edit_analysis_form(request, pk):
 
         json.dump(new_case, case_file.open(mode="w"), indent=2)
 
-        return HttpResponseRedirect(resolve_url("core:analysis_list"))
+        return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
         case_file = Path(sim.input_file)
 

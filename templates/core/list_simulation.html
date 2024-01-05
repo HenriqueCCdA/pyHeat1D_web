@@ -37,7 +37,7 @@
 
           <div class="row">
             <div class="col">
-              <a class="btn btn-success" href="{% url "core:create_analysis_form" %}">
+              <a class="btn btn-success" href="{% url "core:create_simulation_form" %}">
                 <i class="bi bi-plus-square"></i>  Nova simulacao
               </a>
             </div>
@@ -62,16 +62,16 @@
 
                   <td>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <form action="{% url 'core:run_analysis' pk=a.pk %}">
+                      <form action="{% url 'core:run_simulation' pk=a.pk %}">
                         <button type="submit" class="btn btn-primary">Rodar</button>
                       </form>
-                      <form action="{% url 'core:analysis_detail' pk=a.pk %}">
+                      <form action="{% url 'core:detail_simulation' pk=a.pk %}">
                         <button type="submit" class="btn btn-info">Detalhes</button>
                       </form>
-                      <form action="{% url 'core:edit_analysis_form' pk=a.pk %}">
+                      <form action="{% url 'core:edit_simulation_form' pk=a.pk %}">
                         <button type="submit" class="btn btn-secondary">Editar</button>
                       </form>
-                      <form action="{% url 'core:analysis_delete' pk=a.pk %}">
+                      <form action="{% url 'core:delete_simulation' pk=a.pk %}">
                         <button type="submit" class="btn btn-danger">Deletar</button>
                       </form>
                       <form action="{% url 'core:simulation_results' pk=a.pk %}">

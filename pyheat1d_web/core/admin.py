@@ -10,4 +10,12 @@ class PetAdmin(admin.ModelAdmin):
         "tag",
         "input_file",
         "status",
+        "created_at",
+        "modified_at",
+    )
+
+    readonly_fields = (
+        "id",
+        "created_at",
+        "modified_at",
     )

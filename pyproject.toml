@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyheat1dweb"
+name = "pyheat1d_web"
 version = "0.1.0"
 description = "Aplicação fullstack do pyheat1d"
 authors = ["Henrique C. C. de Andrade <henrique.ccda@gmail.com>"]

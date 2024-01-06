@@ -9,7 +9,7 @@ from django.shortcuts import render, resolve_url
 from pyheat1d.controllers import run as run_simulation_cli
 from pyheat1d.singleton import Singleton
 
-from .forms import BC_TYPES, EditSimulationForm, NewSimulationForm
+from .forms import EditSimulationForm, NewSimulationForm
 from .models import Simulation
 
 
@@ -86,12 +86,7 @@ def list_simulation(request):
     return render(request, "core/list_simulation.html", context={"analysis": sim})
 
 
-def detail_simulation(request, pk):
-    sim = Simulation.objects.get(id=pk)
-    case_file = Path(sim.input_file)
-    # TODO: Ler do DB
-    case = json.load(case_file.open(mode="r"))
-
+def _recover_info_detail_from_db(sim):
     data = {
         "Id": sim.pk,
         "Tag": sim.tag,
@@ -99,39 +94,26 @@ def detail_simulation(request, pk):
         "Status": sim.get_status_display(),
     }
 
-    temporal_dist = {
-        "Delta t": case["dt"],
-        "passos de tempo": case["nstep"],
-    }
+    temporal_dist = {"Delta t": sim.dt, "passos de tempo": sim.nstep}
 
-    geom = {
-        "Comprimento": case["length"],
-        "Divisões": case["ndiv"],
-    }
+    geom = {"Comprimento": sim.length, "Divisões": sim.ndiv}
 
-    props = {}
+    bcs = {"Esquerda": sim.lbc_value, "Direita": sim.rbc_value}
 
-    bcs = {
-        "Esquerda": {
-            "tipo": BC_TYPES[int(case["lbc"]["type"])],
-            "params": case["lbc"]["params"],
-        },
-        "Direita": {
-            "tipo": BC_TYPES[int(case["rbc"]["type"])],
-            "params": case["rbc"]["params"],
-        },
-    }
-
-    initial_conditions = {"Temperatuta Inicial": case["initialt"]}
-
-    context = {
+    initial_conditions = {"Temperatuta Inicial": sim.initialt}
+    return {
         "data": data,
-        "props": props,
         "bcs": bcs,
         "geom": geom,
         "temporal_dist": temporal_dist,
         "initial_conditions": initial_conditions,
     }
+
+
+def detail_simulation(request, pk):
+    sim = Simulation.objects.get(id=pk)
+
+    context = _recover_info_detail_from_db(sim)
 
     return render(request, "core/detail_simulation.html", context=context)
 

@@ -29,9 +29,7 @@ class Simulation(BaseModel):
     nstep = models.IntegerField("Número de Passos", default=1_000)
 
     initialt = models.FloatField("Temperatura Inicial", default=0.0)
-
     lbc_value = models.FloatField("Temperatura a esquerda", default=10.0)
-
     rbc_value = models.FloatField("Temperatura a direita", default=-10.0)
 
     def __str__(self):

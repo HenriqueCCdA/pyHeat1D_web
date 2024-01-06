@@ -17,9 +17,22 @@ class Simulation(BaseModel):
         SUCCESS = "S", "Simulação executada"
         FAILED = "F", "Simulação Falhou"
 
-    tag = models.SlugField("Tag", unique=True)
     input_file = models.FilePathField(path=settings.MEDIA_ROOT)  # TODO: Trocar por FileField
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.INIT)
 
+    tag = models.SlugField("Tag", unique=True)
+
+    length = models.FloatField("Comprimento", default=1.0)
+    ndiv = models.IntegerField("Numero de divisões", default=1_000)
+
+    dt = models.FloatField("Passo de Tempo", default=1.0e-01)
+    nstep = models.IntegerField("Número de Passos", default=1_000)
+
+    initialt = models.FloatField("Temperatura Inicial", default=0.0)
+
+    lbc_value = models.FloatField("Temperatura a esquerda", default=10.0)
+
+    rbc_value = models.FloatField("Temperatura a direita", default=-10.0)
+
     def __str__(self):
-        return f"<Tag={self.tag}, Status={self.get_status_display()}>"
+        return self.tag

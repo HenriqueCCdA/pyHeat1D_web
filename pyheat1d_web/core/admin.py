@@ -8,7 +8,6 @@ class PetAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "tag",
-        "input_file",
         "status",
         "created_at",
         "modified_at",
@@ -18,4 +17,9 @@ class PetAdmin(admin.ModelAdmin):
         "id",
         "created_at",
         "modified_at",
+    )
+
+    list_display_links = (
+        "id",
+        "tag",
     )

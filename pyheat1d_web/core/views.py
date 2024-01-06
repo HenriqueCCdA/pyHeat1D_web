@@ -104,11 +104,7 @@ def detail_simulation(request, pk):
         "Divisões": case["ndiv"],
     }
 
-    props = {
-        # "Coeficiente de difusção": case["prop"]["k"],
-        # "Massa específico": case["prop"]["ro"],
-        # "Calor específico": case["prop"]["cp"],
-    }
+    props = {}
 
     bcs = {
         "Esquerda": {
@@ -194,7 +190,7 @@ def simulation_results(request, pk):
 def edit_simulation_form(request, pk):
     sim = Simulation.objects.get(id=pk)
     if request.method == "POST":
-        form = EditSimulationForm(request.POST)
+        form = EditSimulationForm(request.POST, instance=sim)
 
         if not form.is_valid():
             messages.error(request, "Erro na hora da criação da simulação.")
@@ -204,6 +200,8 @@ def edit_simulation_form(request, pk):
                 context={"form": form},
                 status=400,
             )
+
+        form.save()
 
         new_case = form.cleaned_data.copy()
 
@@ -223,18 +221,6 @@ def edit_simulation_form(request, pk):
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
-        case_file = Path(sim.input_file)
-
-        case_old = json.load(case_file.open())
-        case_edit = {
-            "length": case_old["length"],
-            "ndiv": case_old["ndiv"],
-            "dt": case_old["dt"],
-            "nstep": case_old["nstep"],
-            "initialt": case_old["initialt"],
-            "lbc_value": case_old["lbc"]["params"]["value"],
-            "rbc_value": case_old["rbc"]["params"]["value"],
-        }
-        form = EditSimulationForm(case_edit)
+        form = EditSimulationForm(instance=sim)
 
     return render(request, "core/edit_simulation_form.html", context={"form": form, "tag": sim.tag})

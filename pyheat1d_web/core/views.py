@@ -13,6 +13,31 @@ from .forms import BC_TYPES, EditSimulationForm, NewSimulationForm
 from .models import Simulation
 
 
+def _create_or_update_simulation_case(new_case, indent=2, update=False):
+    bcs = {
+        "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
+        "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
+    }
+
+    props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
+
+    new_case.update(bcs)
+    new_case.update({"prop": props, "write_every_steps": 100})
+
+    tag = new_case.pop("tag")
+    if not update:
+        simulation_folder = Path(settings.MEDIA_ROOT) / tag
+        if not simulation_folder.exists():
+            simulation_folder.mkdir()
+
+    case_file = Path(settings.MEDIA_ROOT) / f"{tag}/case.json"
+
+    # TODO: trata a exceção
+    json.dump(new_case, case_file.open(mode="w"), indent=indent)
+
+    return case_file
+
+
 def create_simulation_form(request):
     if request.method == "POST":
         form = NewSimulationForm(request.POST)
@@ -26,29 +51,9 @@ def create_simulation_form(request):
                 status=400,
             )
 
-        new_case = form.cleaned_data.copy()
+        form.instance.input_file = _create_or_update_simulation_case(form.cleaned_data.copy())
 
-        tag = new_case.pop("tag")
-
-        bcs = {
-            "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
-            "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
-        }
-
-        props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
-
-        new_case.update(bcs)
-        new_case.update({"prop": props, "write_every_steps": 100})
-
-        analisys_folder = Path(settings.MEDIA_ROOT) / tag
-        if not analisys_folder.exists():
-            analisys_folder.mkdir()
-
-        case_file = Path(settings.MEDIA_ROOT) / f"{tag}/case.json"
-
-        json.dump(new_case, case_file.open(mode="w"), indent=2)
-
-        Simulation.objects.create(tag=tag, input_file=case_file)
+        form.save()
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
@@ -84,7 +89,7 @@ def list_simulation(request):
 def detail_simulation(request, pk):
     sim = Simulation.objects.get(id=pk)
     case_file = Path(sim.input_file)
-
+    # TODO: Ler do DB
     case = json.load(case_file.open(mode="r"))
 
     data = {
@@ -203,21 +208,8 @@ def edit_simulation_form(request, pk):
 
         form.save()
 
-        new_case = form.cleaned_data.copy()
-
-        bcs = {
-            "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
-            "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
-        }
-
-        props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
-
-        new_case.update(bcs)
-        new_case.update({"prop": props, "write_every_steps": 100})
-
-        case_file = Path(sim.input_file)
-
-        json.dump(new_case, case_file.open(mode="w"), indent=2)
+        case_data = {**form.cleaned_data.copy(), "tag": sim.tag}
+        _create_or_update_simulation_case(case_data, update=True)
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:

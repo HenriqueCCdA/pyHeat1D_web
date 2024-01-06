@@ -74,7 +74,7 @@
                       <form action="{% url 'core:delete_simulation' pk=a.pk %}">
                         <button type="submit" class="btn btn-danger">Deletar</button>
                       </form>
-                      <form action="{% url 'core:simulation_results' pk=a.pk %}">
+                      <form action="{% url 'core:results_simulation' pk=a.pk %}">
                         {% if a.status != "S" %}
                         <button type="submit" class="btn btn-success" disabled>Resultados</button>
                         {% else %}

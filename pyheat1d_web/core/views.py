@@ -170,7 +170,7 @@ def get_simulation_results_api(request, pk):
     return JsonResponse(graphs)
 
 
-def simulation_results(request, pk):
+def results_simulation(request, pk):
     return render(request, "core/results_simulation.html", context={"id": pk})
 
 

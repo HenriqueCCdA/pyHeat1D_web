@@ -13,6 +13,10 @@ from .forms import EditSimulationForm, NewSimulationForm
 from .models import Simulation
 
 
+def _get_simulations_base_folder():
+    return Path(settings.MEDIA_ROOT)
+
+
 def _create_or_update_simulation_case(new_case, indent=2, update=False):
     bcs = {
         "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
@@ -25,12 +29,14 @@ def _create_or_update_simulation_case(new_case, indent=2, update=False):
     new_case.update({"prop": props, "write_every_steps": 100})
 
     tag = new_case.pop("tag")
+    base_folder = _get_simulations_base_folder()
+
     if not update:
-        simulation_folder = Path(settings.MEDIA_ROOT) / tag
+        simulation_folder = base_folder / tag
         if not simulation_folder.exists():
             simulation_folder.mkdir()
 
-    case_file = Path(settings.MEDIA_ROOT) / f"{tag}/case.json"
+    case_file = base_folder / f"{tag}/case.json"
 
     # TODO: trata a exceção
     json.dump(new_case, case_file.open(mode="w"), indent=indent)
@@ -41,14 +47,12 @@ def _create_or_update_simulation_case(new_case, indent=2, update=False):
 def create_simulation_form(request):
     if request.method == "POST":
         form = NewSimulationForm(request.POST)
-
         if not form.is_valid():
             messages.error(request, "Erro na hora da criação da simulação.")
             return render(
                 request,
                 "core/create_simulation_form.html",
                 context={"form": form},
-                status=400,
             )
 
         form.instance.input_file = _create_or_update_simulation_case(form.cleaned_data.copy())

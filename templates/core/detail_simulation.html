@@ -46,6 +46,7 @@
               </tr>
               {% endfor %}
               {% for k, v in bcs.items %}
+              <tr>
                 <th class=""> Condição de contorno a {{ k }} </th>
                 <td>
                   {{ v }} °C
@@ -53,7 +54,7 @@
               </tr>
               {% endfor %}
             </table>
-            <a class="btn btn-secondary" href="{% url 'core:list_simulation' %}"> Voltar </a>
+            <a class="btn btn-secondary" href="{% url 'core:list_simulation' %}">Voltar</a>
           </div>
         </div>
       </div>

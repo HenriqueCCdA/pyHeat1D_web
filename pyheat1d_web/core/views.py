@@ -204,9 +204,8 @@ def edit_simulation_form(request, pk):
                 request,
                 "core/create_simulation_form.html",
                 context={"form": form},
-                status=400,
             )
-
+        form.instance.status = Simulation.Status.INIT
         form.save()
 
         case_data = {**form.cleaned_data.copy(), "tag": sim.tag}

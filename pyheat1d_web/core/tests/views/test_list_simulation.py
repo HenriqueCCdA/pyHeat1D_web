@@ -43,7 +43,7 @@ def test_positive_create_button(client, list_simulation):
 
     assert resp.status_code == HTTPStatus.OK
 
-    rote_create = resolve_url("core:create_simulation_form")
+    route_create = resolve_url("core:create_simulation_form")
 
     assertContains(resp, "Nova simulacao")
-    assertContains(resp, f'href="{rote_create}"')
+    assertContains(resp, f'href="{route_create}"')

@@ -122,13 +122,11 @@ def detail_simulation(request, pk):
     return render(request, "core/detail_simulation.html", context=context)
 
 
-def delete_simulation(request, pk):
-    sim = Simulation.objects.get(id=pk)
-    input_file = Path(sim.input_file)
+def _delete_simulation_folder(input_file):
+    if input_file.exists():
+        input_file.unlink()
 
     base_dir = input_file.parent
-
-    input_file.unlink()
 
     mesh_file = base_dir / "mesh.json"
     if mesh_file.exists():
@@ -140,9 +138,25 @@ def delete_simulation(request, pk):
 
     base_dir.rmdir()
 
+
+def delete_simulation(request, pk):
+    url_out = resolve_url("core:list_simulation")
+
+    try:
+        sim = Simulation.objects.get(id=pk)
+    except Simulation.DoesNotExist:
+        messages.error(request, f"Simulação com {id} não foi encontrada.")
+        return HttpResponseRedirect(url_out)
+
+    try:
+        _delete_simulation_folder(Path(sim.input_file))
+    except OSError:  # TODO: Criar um exeção personalizadas
+        messages.error(request, f"Não foi possivel deletar o diretório da Simulação {sim.tag}.")
+        return HttpResponseRedirect(url_out)
+
     sim.delete()
 
-    return HttpResponseRedirect(resolve_url("core:list_simulation"))
+    return HttpResponseRedirect(url_out)
 
 
 # TODO: limitar ao metodo GET

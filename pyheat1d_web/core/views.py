@@ -5,7 +5,7 @@ from pathlib import Path
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, resolve_url
+from django.shortcuts import get_object_or_404, render, resolve_url
 from pyheat1d.controllers import run as run_simulation_cli
 from pyheat1d.singleton import Singleton
 
@@ -193,7 +193,8 @@ def results_simulation(request, pk):
 
 
 def edit_simulation_form(request, pk):
-    sim = Simulation.objects.get(id=pk)
+    sim = get_object_or_404(Simulation, id=pk)
+
     if request.method == "POST":
         form = EditSimulationForm(request.POST, instance=sim)
 
@@ -210,7 +211,7 @@ def edit_simulation_form(request, pk):
 
         case_data = {**form.cleaned_data.copy(), "tag": sim.tag}
         _create_or_update_simulation_case(case_data, update=True)
-
+        messages.success(request, f"Dados da simulação atualizados {sim.tag}")
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
         form = EditSimulationForm(instance=sim)

@@ -57,7 +57,7 @@ def test_positive_must_have_buttons_criar_voltar(client, simulation):
 
 
 def test_positive_edit(client, tmp_path, mocker, simulation, payload_edit):
-    mocker.patch("pyheat1d_web.core.views._get_simulations_base_folder", return_value=Path(tmp_path))
+    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 
     simulation_foldder = Path(tmp_path) / simulation.tag
     simulation_foldder.mkdir()

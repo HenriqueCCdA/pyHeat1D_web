@@ -79,7 +79,7 @@ def test_must_have_8_inputs(client):
 
 
 def test_positive_create(client, db, tmp_path, mocker, payload_create):
-    mocker.patch("pyheat1d_web.core.views._get_simulations_base_folder", return_value=Path(tmp_path))
+    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 
     resp = client.post(URL, data=payload_create)
 

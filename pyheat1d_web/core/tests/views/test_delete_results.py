@@ -22,7 +22,7 @@ def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
     simulation.input_file = simulation_case_file
     simulation.save()
 
-    mocker.patch("pyheat1d_web.core.views._get_simulations_base_folder", return_value=case_folder_base)
+    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
     resp = client.get(resolve_url("core:delete_simulation", pk=simulation.pk))
 
@@ -56,7 +56,7 @@ def test_negative_delete_dir_not_empty(client, mocker, simulation, tmp_path):
     simulation.input_file = simulation_case_file
     simulation.save()
 
-    mocker.patch("pyheat1d_web.core.views._get_simulations_base_folder", return_value=case_folder_base)
+    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
     resp = client.get(resolve_url("core:delete_simulation", pk=simulation.pk))
 

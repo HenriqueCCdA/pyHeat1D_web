@@ -98,7 +98,7 @@ def _recover_info_detail_from_db(sim):
         "Status": sim.get_status_display(),
     }
 
-    temporal_dist = {"Delta t": sim.dt, "passos de tempo": sim.nstep}
+    temporal_dist = {"Delta t": sim.dt, "Passos de tempo": sim.nstep}
 
     geom = {"Comprimento": sim.length, "Divisões": sim.ndiv}
 

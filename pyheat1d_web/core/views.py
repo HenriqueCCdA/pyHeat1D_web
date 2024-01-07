@@ -30,11 +30,10 @@ def _create_or_update_simulation_case(new_case, indent=2, update=False):
 
     tag = new_case.pop("tag")
     base_folder = _get_simulations_base_folder()
-
     if not update:
         simulation_folder = base_folder / tag
         if not simulation_folder.exists():
-            simulation_folder.mkdir()
+            simulation_folder.mkdir(parents=True)
 
     case_file = base_folder / f"{tag}/case.json"
 

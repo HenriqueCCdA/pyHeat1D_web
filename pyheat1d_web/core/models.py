@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 
 
@@ -17,7 +16,8 @@ class Simulation(BaseModel):
         SUCCESS = "S", "Simulação executada"
         FAILED = "F", "Simulação Falhou"
 
-    input_file = models.FilePathField(path=settings.MEDIA_ROOT)  # TODO: Trocar por FileField
+    # input_file = models.FilePathField(path=settings.MEDIA_ROOT)  # TODO: Trocar por FileField
+    input_file = models.CharField(max_length=10)
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.INIT)
 
     tag = models.SlugField("Tag", unique=True)

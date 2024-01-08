@@ -23,8 +23,8 @@ def create_simulation_form(request):
                 "core/create_simulation_form.html",
                 context={"form": form},
             )
-
-        form.instance.input_file = create_or_update_simulation_case(form.cleaned_data.copy())
+        case_new = create_or_update_simulation_case(form.cleaned_data.copy())
+        form.instance.input_file = str(case_new)
 
         form.save()
 

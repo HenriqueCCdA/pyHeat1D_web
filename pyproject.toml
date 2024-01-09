@@ -13,6 +13,7 @@ django-extensions = "^3.2.3"
 gunicorn = "^21.2.0"
 psycopg2 = "^2.9.9"
 pyheat1d = {git = "https://github.com/HenriqueCCdA/pyHeat1D"}
+python-decouple = "^3.8"
 
 
 [tool.poetry.group.dev.dependencies]

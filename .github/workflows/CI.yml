@@ -68,7 +68,7 @@ jobs:
         poetry install --no-root
 
     - name: Copying configurations
-      run: cp .env_samples .env
+      run: cp .env_sample .env
 
     - name: Tests
       run: poetry run pytest pyheat1d_web --junitxml=test-result.xml --cov=pyheat1d_web --cov-report=xml

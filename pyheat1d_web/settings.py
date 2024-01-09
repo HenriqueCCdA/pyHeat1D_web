@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from decouple import Csv, config
+from django.conf.locale.pt_BR import formats as pt_BR_formats
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -112,3 +113,6 @@ MEDIA_ROOT = "analisys/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+pt_BR_formats.DECIMAL_SEPARATOR = "."
+pt_BR_formats.THOUSAND_SEPARATOR = ","

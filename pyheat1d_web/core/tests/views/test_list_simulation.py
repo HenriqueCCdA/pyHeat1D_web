@@ -1,11 +1,13 @@
 from http import HTTPStatus
 
+import pytest
 from django.shortcuts import resolve_url
 from pytest_django.asserts import assertContains, assertTemplateUsed
 
 URL = resolve_url("core:list_simulation")
 
 
+@pytest.mark.integration
 def test_positive_template_used(client, simulation):
     resp = client.get(URL)
 
@@ -14,6 +16,7 @@ def test_positive_template_used(client, simulation):
     assertTemplateUsed(resp, "core/list_simulation.html")
 
 
+@pytest.mark.integration
 def test_positive_table_list_simulation_two_simulation(client, list_simulation):
     resp = client.get(URL)
 
@@ -38,6 +41,7 @@ def test_positive_table_list_simulation_two_simulation(client, list_simulation):
     assertContains(resp, "Resultados")
 
 
+@pytest.mark.integration
 def test_positive_create_button(client, list_simulation):
     resp = client.get(URL)
 

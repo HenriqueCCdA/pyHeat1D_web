@@ -1,12 +1,14 @@
 from http import HTTPStatus
 from pathlib import Path
 
+import pytest
 from django.shortcuts import resolve_url
 from pytest_django.asserts import assertRedirects
 
 from pyheat1d_web.core.models import Simulation
 
 
+@pytest.mark.integration
 def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
     case_folder_base = Path(tmp_path)
 
@@ -34,6 +36,7 @@ def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
     assert not Simulation.objects.exists()
 
 
+@pytest.mark.integration
 def test_negative_wrong_id(client, db):
     resp = client.get(resolve_url("core:delete_simulation", pk=404))
 
@@ -41,6 +44,7 @@ def test_negative_wrong_id(client, db):
     assertRedirects(resp, resolve_url("core:list_simulation"))
 
 
+@pytest.mark.integration
 def test_negative_delete_dir_not_empty(client, mocker, simulation, tmp_path):
     case_folder_base = Path(tmp_path)
 

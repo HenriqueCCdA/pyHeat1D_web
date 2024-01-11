@@ -1,9 +1,11 @@
 from http import HTTPStatus
 
+import pytest
 from django.shortcuts import resolve_url
 from pytest_django.asserts import assertContains, assertTemplateUsed
 
 
+@pytest.mark.integration
 def test_positive_template_used(client, simulation):
     resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
 
@@ -12,6 +14,7 @@ def test_positive_template_used(client, simulation):
     assertTemplateUsed(resp, "core/detail_simulation.html")
 
 
+@pytest.mark.integration
 def test_positive_must_have_buttons_voltar(client, simulation):
     resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
 
@@ -22,6 +25,7 @@ def test_positive_must_have_buttons_voltar(client, simulation):
     assertContains(resp, f'<a class="btn btn-secondary" href="{url}">Voltar</a>')
 
 
+@pytest.mark.integration
 def test_table(client, simulation):
     resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
 
@@ -42,6 +46,7 @@ def test_table(client, simulation):
     assertContains(resp, "Condição de contorno a Direita")
 
 
+@pytest.mark.integration
 def test_table_value(client, simulation):
     resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
 

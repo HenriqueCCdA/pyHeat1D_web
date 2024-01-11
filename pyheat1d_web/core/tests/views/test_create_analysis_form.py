@@ -38,6 +38,7 @@ def payload_create():
     }
 
 
+@pytest.mark.integration
 def test_positive_template_used(client):
     resp = client.get(URL)
 
@@ -46,6 +47,7 @@ def test_positive_template_used(client):
     assertTemplateUsed(resp, "core/create_simulation_form.html")
 
 
+@pytest.mark.integration
 def test_positive_must_have_buttons_criar_voltar(client):
     resp = client.get(URL)
 
@@ -58,6 +60,7 @@ def test_positive_must_have_buttons_criar_voltar(client):
     assertContains(resp, f'<a class="btn btn-secondary" href="{url}">Voltar</a>')
 
 
+@pytest.mark.integration
 def test_must_have_8_inputs(client):
     resp = client.get(URL)
 
@@ -78,6 +81,7 @@ def test_must_have_8_inputs(client):
     assertContains(resp, 'type="text"')
 
 
+@pytest.mark.integration
 def test_positive_create(client, db, tmp_path, mocker, payload_create):
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 
@@ -102,6 +106,7 @@ def test_positive_create(client, db, tmp_path, mocker, payload_create):
     assert case_read == CASE_FILE
 
 
+@pytest.mark.integration
 def test_negative_create_missing_inputs(client, payload_create, db):
     data = payload_create.copy()
     del data["tag"]
@@ -118,6 +123,7 @@ def test_negative_create_missing_inputs(client, payload_create, db):
     assertContains(resp, "Este campo é obrigatório.")
 
 
+@pytest.mark.integration
 def test_negative_create_simulation_tag_name_must_be_unique(client, payload_create, simulation):
     data = payload_create.copy()
 

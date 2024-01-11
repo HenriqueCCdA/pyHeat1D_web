@@ -8,21 +8,6 @@ from pytest_django.asserts import assertContains, assertRedirects, assertTemplat
 
 from pyheat1d_web.core.models import Simulation
 
-
-@pytest.fixture
-def payload_edit():
-    return {
-        "tag": "sim_01",
-        "length": 512.0,
-        "ndiv": 11_234,
-        "dt": 1.1,
-        "nstep": 112,
-        "initialt": 51.2,
-        "lbc_value": 0.2,
-        "rbc_value": 221.0,
-    }
-
-
 CASE_FILE = {
     "length": 512.0,
     "ndiv": 11_234,

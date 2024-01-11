@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -7,6 +8,11 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+def greater_than_zero(value):
+    if value <= 0:
+        raise ValidationError("Número tem que ser maior que zero.")
 
 
 class Simulation(BaseModel):
@@ -22,11 +28,11 @@ class Simulation(BaseModel):
 
     tag = models.SlugField("Tag", unique=True)
 
-    length = models.FloatField("Comprimento", default=1.0)
-    ndiv = models.IntegerField("Numero de divisões", default=1_000)
+    length = models.FloatField("Comprimento", default=1.0, validators=[greater_than_zero])
+    ndiv = models.IntegerField("Numero de divisões", default=1_000, validators=[greater_than_zero])
 
-    dt = models.FloatField("Passo de Tempo", default=1.0e-01)
-    nstep = models.IntegerField("Número de Passos", default=1_000)
+    dt = models.FloatField("Passo de Tempo", default=1.0e-01, validators=[greater_than_zero])
+    nstep = models.IntegerField("Número de Passos", default=1_000, validators=[greater_than_zero])
 
     initialt = models.FloatField("Temperatura Inicial", default=0.0)
     lbc_value = models.FloatField("Temperatura a esquerda", default=10.0)

@@ -36,6 +36,7 @@ CASE_FILE = {
 }
 
 
+@pytest.mark.integration
 def test_positive_template_used(client, simulation):
     resp = client.get(resolve_url("core:edit_simulation_form", pk=simulation.pk))
 
@@ -44,6 +45,7 @@ def test_positive_template_used(client, simulation):
     assertTemplateUsed(resp, "core/edit_simulation_form.html")
 
 
+@pytest.mark.integration
 def test_positive_must_have_buttons_criar_voltar(client, simulation):
     resp = client.get(resolve_url("core:edit_simulation_form", pk=simulation.pk))
 
@@ -56,6 +58,7 @@ def test_positive_must_have_buttons_criar_voltar(client, simulation):
     assertContains(resp, f'<a class="btn btn-secondary" href="{url}">Voltar</a>')
 
 
+@pytest.mark.integration
 def test_positive_edit(client, tmp_path, mocker, simulation, payload_edit):
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 

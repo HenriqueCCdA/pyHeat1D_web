@@ -2,7 +2,7 @@
 
 Aplicação web para solução de problemas de transporde de calor 1D. O aplicação foi feita utilizando Djando.
 
-O método utilizado para resolvere o problema foi o método dos volumes fintos elementos finitos. O códido pode ser encontrado no [repo](https://github.com/HenriqueCCdA/)
+O método utilizado para resolvere o problema foi o método dos volumes fintos elementos finitos. O códido pode ser encontrado no [repo](https://github.com/HenriqueCCdA/pyHeat1D)
 
 
 ## Ambiente de desenvolvimento local
@@ -36,5 +36,5 @@ task test_report
 Para ver o relatório no navegador
 
 ```bash
-report_server
+task report_server
 ```

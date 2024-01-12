@@ -1,9 +1,7 @@
-import json
-from functools import partial
 from pathlib import Path
 
 from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url
 from pyheat1d.controllers import run as run_simulation_cli
 from pyheat1d.singleton import Singleton
@@ -109,35 +107,6 @@ def delete_simulation(request, pk):
     sim.delete()
 
     return HttpResponseRedirect(url_out)
-
-
-# TODO: limitar ao metodo GET
-def get_simulation_results_api(request, pk):
-    sim = Simulation.objects.get(id=pk)
-
-    input_file = Path(sim.input_file)
-
-    base_dir = input_file.parent
-
-    graphs = {}
-
-    if sim.status == Simulation.Status.SUCCESS:
-        mesh_file = base_dir / "mesh.json"
-        mesh = json.load(mesh_file.open())
-        results_file = base_dir / "results.json"
-        results = json.load(results_file.open())
-
-        graphs["mesh"] = list(map(partial(round, ndigits=2), mesh["xp"]))
-        graphs["steps"] = [
-            {
-                "step": results[i]["istep"],
-                "t": round(results[i]["t"], 2),
-                "u": results[i]["u"],
-            }
-            for i in [0, 1, -1]
-        ]
-
-    return JsonResponse(graphs)
 
 
 def results_simulation(request, pk):

@@ -8,7 +8,7 @@ def _get_simulations_base_folder():
     return Path(settings.MEDIA_ROOT)
 
 
-def create_or_update_simulation_case(new_case, indent=2, update=False):
+def create_or_update_simulation_case(new_case, indent=2, input_file=None):
     new_case = new_case.copy()
 
     bcs = {
@@ -21,14 +21,15 @@ def create_or_update_simulation_case(new_case, indent=2, update=False):
     new_case.update(bcs)
     new_case.update({"prop": props, "write_every_steps": 100})
 
-    tag = new_case.pop("tag")
-    base_folder = _get_simulations_base_folder()
-    if not update:
+    if not input_file:
+        base_folder = _get_simulations_base_folder()
+        tag = new_case.pop("tag")
         simulation_folder = base_folder / tag
         if not simulation_folder.exists():
             simulation_folder.mkdir(parents=True)
-
-    case_file = base_folder / f"{tag}/case.json"
+        case_file = base_folder / f"{tag}/case.json"
+    else:
+        case_file = input_file
 
     # TODO: trata a exceção
     json.dump(new_case, case_file.open(mode="w"), indent=indent)

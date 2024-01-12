@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from pyheat1d_web.core.models import Simulation
@@ -74,3 +76,12 @@ def payload_edit():
         "lbc_value": 0.2,
         "rbc_value": 221.0,
     }
+
+
+@pytest.fixture
+def file_case(tmp_path, simulation):
+    simulation_folder = Path(tmp_path) / simulation.tag
+    simulation_folder.mkdir()
+    file_case = simulation_folder / "case.json"
+    file_case.open(mode="w")
+    return file_case

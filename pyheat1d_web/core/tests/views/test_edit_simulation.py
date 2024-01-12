@@ -1,6 +1,5 @@
 import json
 from http import HTTPStatus
-from pathlib import Path
 
 import pytest
 from django.shortcuts import resolve_url
@@ -33,14 +32,8 @@ def test_positive_must_have_buttons_criar_voltar(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_edit(client, tmp_path, mocker, simulation, payload_edit):
-    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
-
-    simulation_foldder = Path(tmp_path) / simulation.tag
-    simulation_foldder.mkdir()
-    file_case = simulation_foldder / "case.json"
-    file_case.open(mode="w")
-
+def test_positive_edit(client, file_case, simulation, payload_edit):
+    simulation.input_file = file_case
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
 
@@ -60,7 +53,6 @@ def test_positive_edit(client, tmp_path, mocker, simulation, payload_edit):
         assert getattr(simulation, k) == v
 
     assert file_case.exists()
-
     case_read = json.load(file_case.open(mode="r"))
 
     assert case_read == EDIT_CASE_FILE

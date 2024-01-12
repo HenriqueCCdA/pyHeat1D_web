@@ -7,18 +7,7 @@ from django.shortcuts import resolve_url
 from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
 
 from pyheat1d_web.core.models import Simulation
-
-CASE_FILE = {
-    "length": 512.0,
-    "ndiv": 11_234,
-    "dt": 1.1,
-    "nstep": 112,
-    "initialt": 51.2,
-    "lbc": {"type": 1, "params": {"value": 0.2}},
-    "rbc": {"type": 1, "params": {"value": 221.0}},
-    "prop": {"k": 1.0, "ro": 1.0, "cp": 1.0},
-    "write_every_steps": 100,
-}
+from pyheat1d_web.core.tests.constants import EDIT_CASE_FILE
 
 
 @pytest.mark.integration
@@ -74,4 +63,4 @@ def test_positive_edit(client, tmp_path, mocker, simulation, payload_edit):
 
     case_read = json.load(file_case.open(mode="r"))
 
-    assert case_read == CASE_FILE
+    assert case_read == EDIT_CASE_FILE

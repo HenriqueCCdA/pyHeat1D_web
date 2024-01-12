@@ -9,6 +9,18 @@ def _get_simulations_base_folder():
 
 
 def create_or_update_simulation_case(new_case, indent=2, input_file=None):
+    """Cria ou atualiza o arquivo de caso.json. Caso input_file seja diferente de None
+    o arquivo será atualizado
+
+    Args:
+        new_case (Dict): Dicionario com os dados das análises da interface web
+        indent (int, optional): Indentação do json. Defaults to 2.
+        input_file (Path, optional): O caminho do aquivo se ele já existir case.json. Defaults to None.
+
+    Returns:
+        Path: Rentorna o caminho do aquivo criado
+    """
+
     new_case = new_case.copy()
 
     bcs = {
@@ -38,6 +50,12 @@ def create_or_update_simulation_case(new_case, indent=2, input_file=None):
 
 
 def delete_simulation_folder(input_file):
+    """Delete a pasta da simulação
+
+    Args:
+        input_file (Path): Arquivo de caso da simulação
+    """
+
     if input_file.exists():
         input_file.unlink()
 

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import api, views
 
 app_name = "core"
 
@@ -12,5 +12,5 @@ urlpatterns = [
     path("detail/<int:pk>/", views.detail_simulation, name="detail_simulation"),
     path("delete/<int:pk>/", views.delete_simulation, name="delete_simulation"),
     path("results/<int:pk>/", views.results_simulation, name="results_simulation"),
-    path("api/results/<int:pk>/", views.get_simulation_results_api, name="get_simulation_results_api"),
+    path("api/results/<int:pk>/", api.simulation_results, name="simulation_results"),
 ]

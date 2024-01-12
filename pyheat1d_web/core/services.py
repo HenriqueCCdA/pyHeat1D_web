@@ -9,6 +9,8 @@ def _get_simulations_base_folder():
 
 
 def create_or_update_simulation_case(new_case, indent=2, update=False):
+    new_case = new_case.copy()
+
     bcs = {
         "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
         "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},

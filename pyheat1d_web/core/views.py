@@ -160,8 +160,8 @@ def edit_simulation_form(request, pk):
         form.instance.status = Simulation.Status.INIT
         form.save()
 
-        case_data = {**form.cleaned_data.copy(), "tag": sim.tag}
-        create_or_update_simulation_case(case_data, update=True)
+        case_data = form.cleaned_data.copy()
+        create_or_update_simulation_case(case_data, input_file=Path(sim.input_file))
         messages.success(request, f"Dados da simulação atualizados {sim.tag}")
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:

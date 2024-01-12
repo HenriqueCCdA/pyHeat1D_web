@@ -83,10 +83,10 @@ fmt = {cmd="task fmt_ruff && task fmt_black", help="Formatador do código."}
 lin_ruff = {cmd="poetry run ruff check {src}", help="Linter com o Ruff.", use_vars = true}
 linter = {cmd="task lin_ruff", help="Linter."}
 
-tests = {cmd="pytest", help="Rodando os testes."}
-tests_cov = {cmd="pytest --cov-report html --cov={src}", help="Rodando os testes com cobertura.", use_vars = true}
+tests = {cmd="pytest --cov={src}", help="Rodando os testes.", use_vars = true}
+tests_report = {cmd="pytest --cov-report html --cov={src}", help="Rodando os testes com cobertura.", use_vars = true}
 
-server_coverage = {cmd="python -m http.server 8001 -d htmlcov", help="Mostrando o relatorio de cobertura de teste."}
+report_server = {cmd="python -m http.server 8001 -d htmlcov", help="Mostrando o relatorio de cobertura de teste."}
 
 clean = {cmd="rm -rvf .ruff_cache && rm -v .coverage && rm -rfv .pytest_cache && rm -rvf htmlcov && find mk_burger -name '*.pyc' -exec rm -vf {} \\;", help="Limpa o projeto."}
 

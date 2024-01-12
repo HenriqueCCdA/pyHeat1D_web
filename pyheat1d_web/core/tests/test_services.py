@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from pyheat1d_web.core.services import create_or_update_simulation_case
+from pyheat1d_web.core.services import _get_simulations_base_folder, create_or_update_simulation_case
 from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE
 
 
@@ -35,3 +35,8 @@ def test_positive_update_file_case(file_case, simulation, payload_edit):
     case_read = load(update_file_case.open(mode="r"))
 
     assert case_read == EDIT_CASE_FILE
+
+
+@pytest.mark.unit
+def test_get_simulations_base_folder():
+    assert str(_get_simulations_base_folder()) == "analisys"

@@ -14,6 +14,7 @@ gunicorn = "^21.2.0"
 psycopg2 = "^2.9.9"
 pyheat1d = {git = "https://github.com/HenriqueCCdA/pyHeat1D"}
 python-decouple = "^3.8"
+dj-database-url = "^2.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -90,6 +91,6 @@ report_server = {cmd="python -m http.server 8001 -d htmlcov", help="Mostrando o 
 
 clean = {cmd="rm -rvf .ruff_cache && rm -v .coverage && rm -rfv .pytest_cache && rm -rvf htmlcov && find mk_burger -name '*.pyc' -exec rm -vf {} \\;", help="Limpa o projeto."}
 
-# db = {cmd="docker compose up database -d", help="Subindo o contanier do DB."}
+db = {cmd="docker compose up database -d", help="Subindo o contanier do DB."}
 
 # server_prod = {cmd="gunicorn pyheat1d_web.wsgi --workers 3 --bind localhost:8000 --log-file=-  --access-logfile=-", help="Subindo gunicorn"}

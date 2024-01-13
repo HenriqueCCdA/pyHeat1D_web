@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import dj_database_url
 from decouple import Csv, config
 from django.conf.locale.pt_BR import formats as pt_BR_formats
 
@@ -62,12 +63,10 @@ WSGI_APPLICATION = "pyheat1d_web.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+
+default_db_url = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
+parse_db = dj_database_url.parse
+DATABASES = {"default": config("DATABASE_URL", default=default_db_url, cast=parse_db)}
 
 
 # Password validation

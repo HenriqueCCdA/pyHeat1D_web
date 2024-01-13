@@ -45,13 +45,13 @@ jobs:
       matrix:
         python-version: ['3.12']
 
-    # services:
-    #   postgres:
-    #     image: postgres:16.1
-    #     env:
-    #       POSTGRES_USER: test_user
-    #       POSTGRES_PASSWORD: test_password
-    #     ports: [ '5432:5432' ]
+    services:
+      postgres:
+        image: postgres:16.1
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        ports: [ '5432:5432' ]
 
     steps:
     - uses: actions/checkout@v4

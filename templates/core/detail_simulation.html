@@ -49,7 +49,12 @@
         </tr>
         {% endfor %}
       </table>
-      {% include "core/partials/return_list.html" %}
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        {% include "core/partials/return_list.html" %}
+        <form action="{% url 'core:run_simulation' pk=data.Id %}">
+          <button type="submit" class="btn btn-primary">Rodar</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>

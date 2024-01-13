@@ -21,8 +21,10 @@ def test_positive_must_have_buttons_voltar(client, simulation):
     assert resp.status_code == HTTPStatus.OK
 
     url = resolve_url("core:list_simulation")
-
     assertContains(resp, f'<a class="btn btn-secondary" href="{url}">Voltar</a>')
+
+    url = resolve_url("core:run_simulation", pk=simulation.pk)
+    assertContains(resp, '<button type="submit" class="btn btn-primary">Rodar</button>')
 
 
 @pytest.mark.integration

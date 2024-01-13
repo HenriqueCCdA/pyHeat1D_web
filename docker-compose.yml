@@ -1,0 +1,18 @@
+services:
+
+  database:
+    container_name: pyheat1d_web_db
+    image: postgres:16.1-alpine
+    restart: 'no'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - LC_ALL=C.UTF-8
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=pyheat1d_web_user
+      - POSTGRES_DB=pyheat1d_web_db
+    ports:
+      - 5432:5432
+
+volumes:
+  pg_data:

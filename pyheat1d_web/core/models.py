@@ -23,7 +23,7 @@ class Simulation(BaseModel):
         FAILED = "F", "Simulação Falhou"
 
     # input_file = models.FilePathField(path=settings.MEDIA_ROOT)  # TODO: Trocar por FileField
-    input_file = models.CharField(max_length=10)
+    input_file = models.CharField(max_length=1024)
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.INIT)
 
     tag = models.SlugField("Tag", unique=True)

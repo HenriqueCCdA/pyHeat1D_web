@@ -3,12 +3,11 @@ from pathlib import Path
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url
-from pyheat1d.controllers import run as run_simulation_cli
-from pyheat1d.singleton import Singleton
 
 from .forms import EditSimulationForm, NewSimulationForm
 from .models import Simulation
 from .services import create_or_update_simulation_case, delete_simulation_folder
+from .tasks import run_simulation as run_simulation_task
 
 
 def create_simulation_form(request):
@@ -34,20 +33,8 @@ def create_simulation_form(request):
 
 
 def run_simulation(request, pk):
-    sim = Simulation.objects.get(id=pk)
-    sim.status = Simulation.Status.RUNNING
-    sim.save()
-    try:
-        Singleton._instances = {}  # TODO: Gambirra para pode fazer funcionar
-        run_simulation_cli(input_file=Path(sim.input_file))
-    except Exception as e:
-        messages.error(request, e)
-        print(e)  # #TODO: logar
-        sim.status = Simulation.Status.FAILED
-    else:
-        sim.status = Simulation.Status.SUCCESS
-    finally:
-        sim.save()
+    messages.success(request, "Simulação enviada para file de execução.")
+    run_simulation_task.delay(simulation_id=pk)
 
     return HttpResponseRedirect(resolve_url("core:list_simulation"))
 

@@ -96,17 +96,3 @@ Subindo o worker do flower localmente:
 ```bash
 celery --broker=redis://localhost:6379/0 flower --port=5555
 ```
-
-<<<<<<< Updated upstream
-## Subindo todo ambiente de desenvolvimento no docker
-
-Para subir os servições `postgres`, `redis`, `django`, `worker_1` e `worker_2` basta:
-
-```bash
-docker compose up
-```
-
-O worker celery foi configurado com `--concurrency=2` portanto cada `worker` pode executar até duas tarefas. Como temos dois workers ao todo pode-se executar 4 tarefas de forma paralela.
-=======
-
->>>>>>> Stashed changes

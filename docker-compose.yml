@@ -52,6 +52,8 @@ services:
     environment:
       WATCHFILES_FORCE_POLLING: true
       DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
 
   worker_2:
     image: pyheat1d_web:dev
@@ -63,6 +65,8 @@ services:
     environment:
       WATCHFILES_FORCE_POLLING: true
       DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
 
   flower:
     image: pyheat1d_web:dev

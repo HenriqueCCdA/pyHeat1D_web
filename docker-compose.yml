@@ -14,5 +14,12 @@ services:
     ports:
       - 5432:5432
 
+  broker:
+    container_name: pyheat1d_web_broker
+    image: redis:7.2-alpine
+
+    ports:
+      - 6379:6379
+
 volumes:
   pg_data:

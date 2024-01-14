@@ -118,10 +118,8 @@ pt_BR_formats.THOUSAND_SEPARATOR = ","
 
 
 CELERY_TIMEZONE = "America/Sao_Paulo"
-# CELERY_BROKER_URL = "redis://localhost:6379"
-# CELERY_RESULT_BACKEND = "redis://localhost:6379"
-CELERY_BROKER_URL = "redis://broker:6379"
-CELERY_RESULT_BACKEND = "redis://broker:6379"
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = config("CELERY_BROKER_URL")
 
 SHELL_PLUS_IMPORTS = [
     "from pyheat1d_web.core.tasks import run_simulation",

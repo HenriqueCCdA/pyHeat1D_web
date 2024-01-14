@@ -118,5 +118,7 @@ pt_BR_formats.THOUSAND_SEPARATOR = ","
 
 
 CELERY_TIMEZONE = "America/Sao_Paulo"
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://broker:6379"
+CELERY_RESULT_BACKEND = "redis://broker:6379"

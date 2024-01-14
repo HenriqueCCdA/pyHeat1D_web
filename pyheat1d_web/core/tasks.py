@@ -12,9 +12,8 @@ from pyheat1d_web.core.models import Simulation
 def run_simulation(simulation_id):
     Singleton._instances = {}  # TODO: Gambirra para pode fazer funcionar
     sim = Simulation.objects.get(id=simulation_id)
-    msg = None
+    msg = "Sucesso"
     try:
-        sim.status = Simulation.Status.RUNNING
         run_simulation_cli(input_file=Path(sim.input_file))
     except InputFileNotFoundError as e:
         print(e)  # #TODO: logar

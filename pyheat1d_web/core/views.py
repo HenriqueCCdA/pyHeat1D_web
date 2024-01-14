@@ -33,14 +33,25 @@ def create_simulation_form(request):
 
 
 def run_simulation(request, pk):
-    messages.success(request, "Simulação enviada para file de execução.")
-    run_simulation_task.delay(simulation_id=pk)
+    sim = Simulation.objects.get(id=pk)
+
+    if sim.status == Simulation.Status.INIT:
+        sim.status = Simulation.Status.RUNNING
+        sim.save()
+        messages.success(request, f"Simulação {sim.pk} enviada para file de execução.")
+        run_simulation_task.delay(simulation_id=pk)
+    else:
+        msg = (
+            f"O status da simulação {sim.pk} é {sim.get_status_display()}. "
+            "Apenas simulações com status {Simulation.Status.INIT} ."
+        )
+        messages.warning(request, msg)
 
     return HttpResponseRedirect(resolve_url("core:list_simulation"))
 
 
 def list_simulation(request):
-    sim = Simulation.objects.all()
+    sim = Simulation.objects.all().order_by("tag")
     return render(request, "core/list_simulation.html", context={"analysis": sim})
 
 

@@ -122,3 +122,7 @@ CELERY_TIMEZONE = "America/Sao_Paulo"
 # CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_BROKER_URL = "redis://broker:6379"
 CELERY_RESULT_BACKEND = "redis://broker:6379"
+
+SHELL_PLUS_IMPORTS = [
+    "from pyheat1d_web.core.tasks import run_simulation",
+]

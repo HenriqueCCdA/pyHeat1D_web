@@ -5,6 +5,19 @@ Aplicação web para solução de problemas de transporde de calor 1D. O aplica�
 O método utilizado para resolvere o problema foi o método dos volumes fintos elementos finitos. O códido pode ser encontrado no [repo](https://github.com/HenriqueCCdA/pyHeat1D)
 
 
+## Subindo todo ambiente de desenvolvimento no docker
+
+Para subir os serviços `postgres`, `redis`, `django`, `flower`, `worker_1` e `worker_2` basta:
+
+```bash
+docker compose up
+```
+
+O worker celery foi configurado com `--concurrency=2` portanto cada `worker` pode executar até duas tarefas. Como temos dois workers ao todo pode-se executar 4 tarefas de forma paralela.
+
+A aplicação principal [http://localhost:8000/](http://localhost:8000/) e o flower no [http://0.0.0.0:5555/](http://0.0.0.0:5555/)
+
+
 ## Ambiente de desenvolvimento local
 
 Para instalar as dependencias basta:
@@ -84,6 +97,7 @@ Subindo o worker do flower localmente:
 celery --broker=redis://localhost:6379/0 flower --port=5555
 ```
 
+<<<<<<< Updated upstream
 ## Subindo todo ambiente de desenvolvimento no docker
 
 Para subir os servições `postgres`, `redis`, `django`, `worker_1` e `worker_2` basta:
@@ -93,3 +107,6 @@ docker compose up
 ```
 
 O worker celery foi configurado com `--concurrency=2` portanto cada `worker` pode executar até duas tarefas. Como temos dois workers ao todo pode-se executar 4 tarefas de forma paralela.
+=======
+
+>>>>>>> Stashed changes

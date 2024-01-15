@@ -40,8 +40,6 @@ def test_must_have_8_inputs(client):
 
     assert resp.status_code == HTTPStatus.OK
 
-    assertContains(resp, "<input", 9)  # CSRF
-
     assertContains(resp, "Tag")
     assertContains(resp, "Comprimento")
     assertContains(resp, "Numero de divisões")

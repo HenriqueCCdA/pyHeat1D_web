@@ -141,3 +141,7 @@ def edit_simulation_form(request, pk):
         form = EditSimulationForm(instance=sim)
 
     return render(request, "core/edit_simulation_form.html", context={"form": form, "tag": sim.tag})
+
+
+def redirect_flower(request):
+    return HttpResponseRedirect("http://localhost:5555")

@@ -1,8 +1,8 @@
 # PyHeat1D Web
 
-Aplicação web para solução de problemas de transporde de calor 1D. O aplicação foi feita utilizando Djando.
+Aplicação `web` para solução de problemas de `transporde de calor 1D`. O aplicação foi feita utilizando `Djando`. As simulação são executadas utilizando as funcionalidades do `celery`.
 
-O método utilizado para resolvere o problema foi o método dos volumes fintos elementos finitos. O códido pode ser encontrado no [repo](https://github.com/HenriqueCCdA/pyHeat1D)
+O método utilizado para resolver o problema foi o método dos volumes fintos. O códido pode ser encontrado no [repositório](https://github.com/HenriqueCCdA/pyHeat1D)
 
 
 ## Subindo todo ambiente de desenvolvimento no docker

@@ -13,4 +13,5 @@ urlpatterns = [
     path("delete/<int:pk>/", views.delete_simulation, name="delete_simulation"),
     path("results/<int:pk>/", views.results_simulation, name="results_simulation"),
     path("api/results/<int:pk>/", api.simulation_results, name="simulation_results"),
+    path("celery/flower/", views.redirect_flower, name="redirect_flower"),
 ]

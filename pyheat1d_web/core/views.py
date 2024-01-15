@@ -48,8 +48,8 @@ def run_simulation(request, pk):
         run_simulation_task.delay(simulation_id=pk)
     else:
         msg = (
-            f"O status da simulação {sim.pk} é {sim.get_status_display()}. "
-            "Apenas simulações com status {Simulation.Status.INIT} ."
+            f"O status da simulação {sim.pk} é '{sim.get_status_display()}'. "
+            f"Apenas simulações com status '{Simulation.Status.INIT.label}' ."
         )
         messages.warning(request, msg)
 

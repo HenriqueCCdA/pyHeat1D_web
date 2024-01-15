@@ -33,12 +33,18 @@ def create_simulation_form(request):
 
 
 def run_simulation(request, pk):
-    sim = Simulation.objects.get(id=pk)
+    url_out = resolve_url("core:list_simulation")
+
+    try:
+        sim = Simulation.objects.get(id=pk)
+    except Simulation.DoesNotExist:
+        messages.error(request, f"Simulação com {id} não foi encontrada.")
+        return HttpResponseRedirect(url_out)
 
     if sim.status == Simulation.Status.INIT:
         sim.status = Simulation.Status.RUNNING
         sim.save()
-        messages.success(request, f"Simulação {sim.pk} enviada para file de execução.")
+        messages.success(request, f"Simulação {sim.pk} enviada para fila de execução.")
         run_simulation_task.delay(simulation_id=pk)
     else:
         msg = (
@@ -47,7 +53,7 @@ def run_simulation(request, pk):
         )
         messages.warning(request, msg)
 
-    return HttpResponseRedirect(resolve_url("core:list_simulation"))
+    return HttpResponseRedirect(url_out)
 
 
 def list_simulation(request):

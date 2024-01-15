@@ -17,6 +17,7 @@ def test_model_fiels(simulation):
     assert simulation._meta.get_field("initialt")
     assert simulation._meta.get_field("lbc_value")
     assert simulation._meta.get_field("rbc_value")
+    assert simulation._meta.get_field("celery_task")
     assert simulation._meta.get_field("created_at")
     assert simulation._meta.get_field("modified_at")
 

@@ -38,5 +38,7 @@ class Simulation(BaseModel):
     lbc_value = models.FloatField("Temperatura a esquerda", default=10.0)
     rbc_value = models.FloatField("Temperatura a direita", default=-10.0)
 
+    celery_task = models.UUIDField(null=True, blank=True)
+
     def __str__(self):
         return self.tag

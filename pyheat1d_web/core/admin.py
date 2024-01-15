@@ -15,6 +15,7 @@ class PetAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "id",
+        "celery_task",
         "created_at",
         "modified_at",
     )

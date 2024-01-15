@@ -45,7 +45,9 @@ def run_simulation(request, pk):
         sim.status = Simulation.Status.RUNNING
         sim.save()
         messages.success(request, f"Simulação {sim.pk} enviada para fila de execução.")
-        run_simulation_task.delay(simulation_id=pk)
+        task = run_simulation_task.delay(simulation_id=pk)
+        sim.celery_task = task.id
+        sim.save()
     else:
         msg = (
             f"O status da simulação {sim.pk} é '{sim.get_status_display()}'. "

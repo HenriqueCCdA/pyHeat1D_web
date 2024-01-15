@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from uuid import uuid4
 
 import pytest
 from django.shortcuts import resolve_url
@@ -12,15 +13,24 @@ redirect_view_name = "core:list_simulation"
 
 @pytest.mark.integration
 def test_positive_init_status(client, mocker, simulation):
-    run_simulation_task = mocker.patch("pyheat1d_web.core.views.run_simulation_task")
+    AsyncResultMock = type("AsyncResultMock", (), {"id": uuid4()})
+
+    run_simulation_task_delay = mocker.patch(
+        "pyheat1d_web.core.views.run_simulation_task.delay",
+        return_value=AsyncResultMock,
+    )
 
     resp = client.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url(redirect_view_name))
 
-    run_simulation_task.delay.assert_called_once()
-    run_simulation_task.delay.assert_called_once_with(simulation_id=simulation.pk)
+    run_simulation_task_delay.assert_called_once()
+    run_simulation_task_delay.assert_called_once_with(simulation_id=simulation.pk)
+
+    simulation.refresh_from_db()
+
+    assert simulation.celery_task == AsyncResultMock.id
 
 
 @pytest.mark.integration
@@ -49,6 +59,10 @@ def test_negative_should_be_called_only_to_the_init_status(client, mocker, simul
     assertRedirects(resp, resolve_url(redirect_view_name))
 
     run_simulation_task.delay.assert_not_called()
+
+    simulation.refresh_from_db()
+
+    assert simulation.celery_task is None
 
 
 def test_negative_wrong_id(client, mocker, db):

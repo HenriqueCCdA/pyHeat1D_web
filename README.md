@@ -15,10 +15,12 @@ docker compose up
 
 O worker celery foi configurado com `--concurrency=2` portanto cada `worker` pode executar até duas tarefas. Como temos dois workers ao todo pode-se executar 4 tarefas de forma paralela.
 
-A aplicação principal [http://localhost:8000/](http://localhost:8000/) e o flower no [http://0.0.0.0:5555/](http://0.0.0.0:5555/)
+A aplicação principal [http://localhost:8000/](http://localhost:8000/) e o flower no [http://localhost:5555/](http://localhost:5555/)
 
 
 ## Ambiente de desenvolvimento local
+
+Você tem a opção de executar o `django`, `worker` e `flower` localmente. Já o `redis` é `postgres` é recomendado utilizar sempre o `docker compose`.
 
 Para instalar as dependencias basta:
 
@@ -91,8 +93,20 @@ Subindo o worker do celery localmente:
 watchfiles --filter python 'celery -A pyheat1d_web.celery worker --concurrency=2  -l INFO'
 ```
 
+ou
+
+```bash
+docker compose up worker_1 worker_2
+```
+
 Subindo o worker do flower localmente:
 
 ```bash
 celery --broker=redis://localhost:6379/0 flower --port=5555
+```
+
+ou
+
+```bash
+docker compose up flower
 ```

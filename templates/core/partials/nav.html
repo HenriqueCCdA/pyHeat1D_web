@@ -9,11 +9,14 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'core:list_simulation' %}">Home</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url "core:create_simulation_form" %}">Nova Simulação</a>
+        </li>
       </ul>
-      <form class="d-flex">
+      {% comment %} <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Tag" aria-label="Search">
         <button class="btn btn-success text-light" type="submit">Procurar</button>
-      </form>
+      </form> {% endcomment %}
     </div>
   </div>
 </nav>

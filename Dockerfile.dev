@@ -23,8 +23,7 @@ RUN apt-get update && apt-get install -y\
 RUN pip install --upgrade pip && pip install poetry
 
 # install dependencies
-copy pyproject.toml poetry.lock /home/app
-# copy poetry.lock /home/app
+copy pyproject.toml poetry.lock /home/app/
 
 RUN poetry install --no-interaction --no-cache
 

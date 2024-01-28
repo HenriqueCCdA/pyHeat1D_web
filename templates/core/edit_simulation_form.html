@@ -5,46 +5,37 @@
 {% block main %}
 
 <div class="container">
-
-<h1>Formulário de edição da simulação {{ tag }}</h1>
-
-<div class="row">
-  {% if messages %}
-    <ol>
-    {% for message in messages %}
-      {% if message.tags == "error" %}
-      <li class="alert alert-danger">
-        {{message}}
-      </li>
-      {% else %}
-      <li class="alert alert-success">
-        {{message}}
-      </li>
-      {% endif %}
-    {% endfor %}
-    </ol>
-  {% endif %}
-</div>
-
-<form class="row " method="post">
-  {% csrf_token %}
-  {% for field in form.visible_fields %}
-    <div class="mb-3 row">
-      <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}" >{{field.label}}</label>
-      <div class="col-sm-2">
-        {{ field }}
+  <div class="row">
+    <div class="col-sm">
+      <div class="shadow mt-4 p-4 rounded bg-light">
+        <h4 class="text-center">Formulário de edição da simulação {{ tag }}</h4>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form.visible_fields %}
+            <div class="mb-2 row">
+              <label class="col-sm-8 col-form-label" for="{{ field.id_for_label }}" >{{field.label}}</label>
+              <div class="col-sm-4">
+                {{ field }}
+              </div>
+              {% if field.errors %}
+              <div class="alert alert-danger">
+                {{ field.errors }}
+              </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <div>
+            <button class="btn btn-primary" type="submit">Salvar</button>
+            {% include "core/partials/return_list.html" %}
+          </div>
+        </form>
       </div>
-      {% if field.errors %}
-      <div class="alert alert-danger">
-        {{ field.errors }}
-      </div>
-      {% endif %}
     </div>
-  {% endfor %}
-  <div>
-    <button class="btn btn-primary" type="submit">Salvar</button>
-    {% include "core/partials/return_list.html" %}
   </div>
-</form>
+  <div class="mt-2 row">
+    <div class="col-12">
+    {% include "core/partials/messages.html" %}
+    </div>
+  </div>
 </div>
 {% endblock main %}

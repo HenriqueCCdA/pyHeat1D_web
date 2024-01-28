@@ -6,54 +6,55 @@
 
 <div class="container">
   <div class="row">
-    <div class="col">
-
-      <h4 class="text-center">Infos da Simulação</h3>
-      <table class="table table-borderless table-hover">
-        {% for k, v in data.items %}
-        <tr>
-          <th>{{ k }}</th>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-        {% for k, v in geom.items %}
-        <tr>
-          <th>{{ k }}</th>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-        {% for k, v in temporal_dist.items %}
-        <tr>
-          <th>{{ k }}</th>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-        {% for k, v in props.items %}
-        <tr>
-          <th>{{ k }}</th>
-          <td>{{ v }}</td>
-        </tr>
-        {% endfor %}
-        {% for k, v in initial_conditions.items %}
-        <tr>
-          <th>{{ k }}</th>
-          <td>{{ v }} °C</td>
-        </tr>
-        {% endfor %}
-        {% for k, v in bcs.items %}
-        <tr>
-          <th class=""> Condição de contorno a {{ k }} </th>
-          <td>
-            {{ v }} °C
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        {% include "core/partials/return_list.html" %}
-        <form action="{% url 'core:run_simulation' pk=data.Id %}">
-          <button type="submit" class="btn btn-primary">Rodar</button>
-        </form>
+    <div class="col-sm">
+      <div class="shadow mt-4 p-4 rounded bg-light">
+        <h4 class="text-center">Infos da Simulação</h3>
+        <table class="table table-borderless table-hover">
+          {% for k, v in data.items %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
+          {% for k, v in geom.items %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
+          {% for k, v in temporal_dist.items %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
+          {% for k, v in props.items %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }}</td>
+          </tr>
+          {% endfor %}
+          {% for k, v in initial_conditions.items %}
+          <tr>
+            <th>{{ k }}</th>
+            <td>{{ v }} °C</td>
+          </tr>
+          {% endfor %}
+          {% for k, v in bcs.items %}
+          <tr>
+            <th class=""> Condição de contorno a {{ k }} </th>
+            <td>
+              {{ v }} °C
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          {% include "core/partials/return_list.html" %}
+          <form action="{% url 'core:run_simulation' pk=data.Id %}">
+            <button type="submit" class="btn btn-primary">Rodar</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

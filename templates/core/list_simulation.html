@@ -7,8 +7,6 @@
 
   <div class="row">
 
-    <h1>Lista de análises</h1>
-
     <div class="mb-2 row">
       <div class="col-12">
       {% include "core/partials/messages.html" %}
@@ -24,7 +22,9 @@
     </div>
 
     <div class="row">
-      <table class="table text-center table-striped table-hover table-borderless align-middle">
+      <div class="shadow mt-4 p-3rounded bg-light">
+        <h2>Lista de análises</h2>
+        <table class="table text-center table-striped table-hover table-borderless align-middle">
         <thead>
           <tr>
             <th scope="row" class="align-center">Id</th>
@@ -66,7 +66,8 @@
           </tr>
           {% endfor %}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   </div>
 </div>

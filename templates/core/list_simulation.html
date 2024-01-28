@@ -7,69 +7,85 @@
 
   <div class="row">
 
-    <div class="mb-2 row">
+    <div class="mt-2 row">
       <div class="col-12">
       {% include "core/partials/messages.html" %}
       </div>
     </div>
 
     <div class="row">
-      <div class="col">
-        <a class="btn btn-success" href="{% url "core:create_simulation_form" %}">
-          <i class="bi bi-plus-square"></i>  Nova simulacao
-        </a>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="shadow mt-4 p-3rounded bg-light">
+      <div class="shadow mt-4 p-3 rounded bg-light">
         <h2>Lista de análises</h2>
         <table class="table text-center table-striped table-hover table-borderless align-middle">
-        <thead>
-          <tr>
-            <th scope="row" class="align-center">Id</th>
-            <th scope="col" class="align-center">Tag</th>
-            <th scope="col" class="align-center">Status</th>
-            <th scope="col" class="align-center">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in analysis%}
-          <tr>
-            <th scope="row">{{a.id}}</td>
-            <td>{{a.tag}}</td>
-            <td>{{a.get_status_display}}</td>
+          <thead>
+            <tr>
+              <th scope="row" class="align-center">Id</th>
+              <th scope="col" class="align-center">Tag</th>
+              <th scope="col" class="align-center">Status</th>
+              <th scope="col" class="align-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in analysis%}
+            <tr>
+              <th scope="row">{{a.id}}</td>
+              <td>{{a.tag}}</td>
+              <td>{{a.get_status_display}}</td>
 
-            <td>
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <form action="{% url 'core:run_simulation' pk=a.pk %}">
-                  <button type="submit" class="btn btn-primary">Rodar</button>
-                </form>
-                <form action="{% url 'core:detail_simulation' pk=a.pk %}">
-                  <button type="submit" class="btn btn-info">Detalhes</button>
-                </form>
-                <form action="{% url 'core:edit_simulation_form' pk=a.pk %}">
-                  <button type="submit" class="btn btn-secondary">Editar</button>
-                </form>
-                <form action="{% url 'core:delete_simulation' pk=a.pk %}">
-                  <button type="submit" class="btn btn-danger">Deletar</button>
-                </form>
-                <form action="{% url 'core:results_simulation' pk=a.pk %}">
-                  {% if a.status != "S" %}
-                  <button type="submit" class="btn btn-success" disabled>Resultados</button>
-                  {% else %}
-                  <button type="submit" class="btn btn-success">Resultados</button>
-                  {% endif %}
-                </form>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
+              <td>
+                <div class="dropdown">
+                  <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    +
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <li>
+                      <form  action="{% url 'core:run_simulation' pk=a.pk %}">
+                        <button type="submit" class="dropdown-item">Rodar</button>
+                      </form>
+                    </li>
+                    <li>
+                      <form action="{% url 'core:detail_simulation' pk=a.pk %}">
+                        <button type="submit" class="dropdown-item">Detalhes</button>
+                      </form>
+                    </li>
+                    <li>
+                      <form action="{% url 'core:edit_simulation_form' pk=a.pk %}">
+                        <button type="submit" class="dropdown-item">Editar</button>
+                      </form>
+                    </li>
+                    <li>
+                      <form action="{% url 'core:delete_simulation' pk=a.pk %}">
+                        <button type="submit" class="dropdown-item">Deletar</button>
+                      </form>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <form action="{% url 'core:results_simulation' pk=a.pk %}">
+                        {% if a.status != "S" %}
+                        <button type="submit" class="dropdown-item disabled">Resultados</button>
+                        {% else %}
+                        <button type="submit" class="dropdown-item">Resultados</button>
+                        {% endif %}
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
+
+        <div class="row mb-3">
+          <div class="d-flex justify-content-between">
+          <a class="btn btn-success" href="{% url "core:create_simulation_form" %}">
+            <i class="bi bi-plus-square"></i>  Nova simulacao
+          </a>
+        </div>
+
       </div>
     </div>
-  </div>
 </div>
 
 {% endblock main %}

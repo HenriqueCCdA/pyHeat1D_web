@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -116,7 +118,31 @@ def delete_simulation(request, pk):
 
 
 def results_simulation(request, pk):
-    return render(request, "core/results_simulation.html", context={"id": pk})
+
+    sim = get_object_or_404(Simulation, pk=pk)
+
+    if sim.status == Simulation.Status.SUCCESS:
+        input_file = Path(sim.input_file)
+        base_dir = input_file.parent
+        graphs = {}
+        results_file = base_dir / "results.json"
+        results = json.load(results_file.open())
+        isteps = [ round(r["t"], 6) for r in results]
+
+        endpoint = f"/api/results/{pk}/?{request.GET.urlencode()}" if request.GET.urlencode() else f"/api/results/{pk}/"
+
+        context = {
+            "id": pk,
+            "endpoint": endpoint,
+            "isteps": isteps,
+            "results_available": True,
+        }
+
+        return render(request, "core/results_simulation.html", context)
+
+    context = {"results_available": False}
+
+    return render(request, "core/results_simulation.html", context)
 
 
 def edit_simulation_form(request, pk):

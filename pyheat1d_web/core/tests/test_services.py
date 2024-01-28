@@ -1,10 +1,13 @@
+import re
 from json import load
 from pathlib import Path
+
 
 import pytest
 
 from pyheat1d_web.core.services import _get_simulations_base_folder, create_or_update_simulation_case
 from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE
+from pyheat1d_web.core.services import cleaned_isteps
 
 
 @pytest.mark.unit
@@ -40,3 +43,26 @@ def test_positive_update_file_case(file_case, simulation, payload_edit):
 @pytest.mark.unit
 def test_get_simulations_base_folder():
     assert str(_get_simulations_base_folder()) == "analisys"
+
+
+@pytest.mark.unit
+def test_postive_cleaned_isteps():
+    assert cleaned_isteps(["0", "1", "45", "49"], 50) == [0, 1, 45, 49]
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("values, error", [
+    (
+        ("-1", "1", "2"), "O passo de tempo não pode ser negativo."
+    ),
+    (
+        ("0", "1", "50"), "O passo de tempo não pode ser maior ou igual a 50."
+    ),
+    (
+        ("0", "not a int", "3"), "invalid literal for int() with base 10: 'not a int'"
+    ),
+])
+def test_negative_invalid_isteps(values, error):
+
+    with pytest.raises(ValueError, match=re.escape(error)):
+        cleaned_isteps(values, 50)

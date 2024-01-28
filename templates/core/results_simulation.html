@@ -5,11 +5,35 @@
 
 {% block main %}
       <div class="container text-center">
-        <div  class="row">
-          <canvas id="plot_area"></canvas>
+        <div class="row">
+          {% if results_available %}
+          <div class="col-10">
+            <canvas id="plot_area"></canvas>
+          </div>
+          <div class="mt-5 col-2">
+            <form>
+              <label for="istep">Passos de tempo:</label>
+              <select class="form-select form-select-lg" size=10 name="istep" id="istep" multiple>
+                {% for i in isteps %}
+                  <option value={{ forloop.counter0 }}>{{ i }}</option>
+                {% endfor %}
+              </select>
+              <div>
+                <button class="btn btn-primary" type="submit">Plotar</button>
+              </div>
+            </form>
+          </div>
+          {% else %}
+          <h1> Não existe resultados disponíveis para essa simulação ainda.</h1>
+          {% endif %}
         </div>
         <div  class="row">
+          <div class="mt-5 col-2">
           <a class="btn btn-secondary" href="{% url 'core:list_simulation' %}"> Voltar </a>
+          {% if results_available %}
+            <a class="btn btn-warning" href="{% url 'core:results_simulation' pk=id %}"> Reset </a>
+          {% endif %}
+          </div>
         </div>
       </div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -17,7 +41,7 @@
       <script src="{% static 'js/chart.js' %}"></script>
       <script>
 
-        endpoint = "/api/results/{{ id }}"
+        endpoint = "{{ endpoint|safe}}"
 
         $.ajax({
           method: "GET",

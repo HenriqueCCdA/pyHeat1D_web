@@ -69,6 +69,8 @@ services:
     environment:
       PYTHONBREAKPOINT: ipdb.set_trace
       DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
     ports:
       - 8000:8000
     depends_on:

@@ -129,7 +129,7 @@ def edit_simulation_form(request, pk):
             messages.error(request, "Erro na hora da criação da simulação.")
             return render(
                 request,
-                "core/create_simulation_form.html",
+                "core/edit_simulation_form.html",
                 context={"form": form},
             )
         form.instance.status = Simulation.Status.INIT

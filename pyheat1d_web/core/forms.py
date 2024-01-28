@@ -9,7 +9,7 @@ class NewSimulationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs["class"] = "form-control col-sm-10"
+            visible.field.widget.attrs["class"] = "form-control form-control-sm"
 
     class Meta:
         model = Simulation

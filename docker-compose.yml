@@ -1,26 +1,5 @@
 services:
 
-  app:
-    container_name: pyheat1d_web
-    build:
-      dockerfile: ./Dockerfile.dev
-    image: pyheat1d_web:dev
-    volumes:
-      - ./:/home/app/
-    restart: 'no'
-    stdin_open: true
-    tty: true
-    env_file:
-      - .env
-    environment:
-      PYTHONBREAKPOINT: ipdb.set_trace
-      DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
-    ports:
-      - 8000:8000
-    depends_on:
-      - database
-      - broker
-
   database:
     container_name: pyheat1d_web_db
     image: postgres:16.1-alpine
@@ -74,6 +53,27 @@ services:
 
     ports:
       - 5555:5555
+
+  app:
+    container_name: pyheat1d_web
+    build:
+      dockerfile: ./Dockerfile.dev
+    image: pyheat1d_web:dev
+    volumes:
+      - ./:/home/app/
+    restart: 'no'
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    environment:
+      PYTHONBREAKPOINT: ipdb.set_trace
+      DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+      - broker
 
 volumes:
   pg_data:

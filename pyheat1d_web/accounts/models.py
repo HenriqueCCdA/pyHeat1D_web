@@ -5,7 +5,15 @@ from django.db import models
 from pyheat1d_web.accounts.managers import UserManager
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CreationModificationBase(models.Model):
+    created_at = models.DateTimeField("Criado em", auto_now_add=True)
+    modified_at = models.DateTimeField("Modificado em", auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class CustomUser(PermissionsMixin, CreationModificationBase, AbstractBaseUser):
     name = models.CharField("Nome completo", max_length=120)
     email = models.EmailField("Email", unique=True)
 

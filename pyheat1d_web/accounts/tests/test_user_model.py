@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -33,3 +35,8 @@ def test_normilized_email(db):
     user = User(email="lunadonald@EXAMPLE.oRg")
     user.clean()
     assert user.email == "lunadonald@example.org"
+
+
+def test_create_at_and_modified_at(user):
+    assert isinstance(user.created_at, datetime)
+    assert isinstance(user.modified_at, datetime)

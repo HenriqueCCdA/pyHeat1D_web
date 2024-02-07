@@ -13,7 +13,7 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-
+AUTH_USER_MODEL = "accounts.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django_extensions",
     #
     "pyheat1d_web.core",
+    "pyheat1d_web.accounts",
 ]
 
 MIDDLEWARE = [

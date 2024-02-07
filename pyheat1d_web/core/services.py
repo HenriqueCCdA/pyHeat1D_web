@@ -18,7 +18,7 @@ def create_or_update_simulation_case(new_case, indent=2, input_file=None):
         input_file (Path, optional): O caminho do aquivo se ele já existir case.json. Defaults to None.
 
     Returns:
-        Path: Rentorna o caminho do aquivo criado
+        Path: Retorna o caminho do aquivo criado
     """
 
     new_case = new_case.copy()
@@ -70,3 +70,29 @@ def delete_simulation_folder(input_file):
         results_file.unlink()
 
     base_dir.rmdir()
+
+
+def cleaned_isteps(query_list, max_istep):
+    """Gera um lista de passo de tempo de um lista
+
+    Args:
+        query_list (list[str]): Lista de passos de tempos
+        max_istep (int): Valor máximo permitido para o passo de tempo.
+
+    Returns:
+        list[str]: Retorna uma lista de passos de tempo
+    """
+
+    isteps = []
+
+    for query_item in query_list:
+        n = int(query_item)
+
+        if n < 0:
+            raise ValueError("O passo de tempo não pode ser negativo.")
+        elif n >= max_istep:
+            raise ValueError(f"O passo de tempo não pode ser maior ou igual a {max_istep}.")
+
+        isteps.append(n)
+
+    return isteps

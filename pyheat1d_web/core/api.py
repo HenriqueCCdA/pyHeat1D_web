@@ -1,7 +1,7 @@
 import json
 from functools import partial
-from pathlib import Path
 from http import HTTPStatus
+from pathlib import Path
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -9,8 +9,6 @@ from django.views.decorators.http import require_http_methods
 
 from .models import Simulation
 from .services import cleaned_isteps
-
-
 
 
 @require_http_methods(["GET"])
@@ -28,14 +26,14 @@ def simulation_results(request, pk):
         results_file = base_dir / "results.json"
         results = json.load(results_file.open())
 
-        isteps = [0, len(results)//2, -1]
+        isteps = [0, len(results) // 2, -1]
 
-        if query_list:=request.GET.getlist("istep"):
+        if query_list := request.GET.getlist("istep"):
             try:
                 isteps = cleaned_isteps(query_list, len(results))
             except ValueError:
                 return JsonResponse(
-                    {"detail": f"Valores invalidos para o passo de tempo."},
+                    {"detail": "Valores invalidos para o passo de tempo."},
                     status=HTTPStatus.UNPROCESSABLE_ENTITY,
                 )
 

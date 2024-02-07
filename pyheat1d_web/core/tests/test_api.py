@@ -76,7 +76,7 @@ def test_positive_get_simulation_query_params(client, simulation):
     simulation.save()
 
     response = client.get(
-        resolve_url(ROUTE_NAME, simulation.pk)+"?istep=0&istep=3",
+        resolve_url(ROUTE_NAME, simulation.pk) + "?istep=0&istep=3",
         content_type=CT_JSON,
     )
 
@@ -106,11 +106,14 @@ def test_positive_get_simulation_query_params(client, simulation):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("values", [
-    ("-1", "1", "2"),
-    ("0", "1", "50"),
-    ("0", "not a int", "3"),
-])
+@pytest.mark.parametrize(
+    "values",
+    [
+        ("-1", "1", "2"),
+        ("0", "1", "50"),
+        ("0", "not a int", "3"),
+    ],
+)
 def test_negative_get_simulation_invalid_query_params(client, simulation, values):
     simulation.status = Simulation.Status.SUCCESS
 
@@ -119,10 +122,10 @@ def test_negative_get_simulation_invalid_query_params(client, simulation, values
     simulation.input_file = base_dir / "pyheat1d_web/core/tests/assets/results.json"
     simulation.save()
 
-    query_string=f"?istep={values[0]}&istep={values[1]}&istep={values[2]}"
+    query_string = f"?istep={values[0]}&istep={values[1]}&istep={values[2]}"
 
     response = client.get(
-        resolve_url(ROUTE_NAME, simulation.pk)+query_string,
+        resolve_url(ROUTE_NAME, simulation.pk) + query_string,
         content_type=CT_JSON,
     )
 

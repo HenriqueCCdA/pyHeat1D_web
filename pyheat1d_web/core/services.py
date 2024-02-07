@@ -72,7 +72,6 @@ def delete_simulation_folder(input_file):
     base_dir.rmdir()
 
 
-
 def cleaned_isteps(query_list, max_istep):
     """Gera um lista de passo de tempo de um lista
 
@@ -87,7 +86,6 @@ def cleaned_isteps(query_list, max_istep):
     isteps = []
 
     for query_item in query_list:
-
         n = int(query_item)
 
         if n < 0:

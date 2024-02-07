@@ -24,7 +24,9 @@
             </form>
           </div>
           {% else %}
-          <h1> Não existe resultados disponíveis para essa simulação ainda.</h1>
+          <div class="mt-5">
+            <h1 class="alert alert-info"> Não existe resultados disponíveis para essa simulação ainda.</h1>
+          </div>
           {% endif %}
         </div>
         <div  class="row">
@@ -41,7 +43,7 @@
       <script src="{% static 'js/chart.js' %}"></script>
       <script>
 
-        endpoint = "{{ endpoint|safe}}"
+        endpoint = "{{ endpoint|safe }}"
 
         $.ajax({
           method: "GET",

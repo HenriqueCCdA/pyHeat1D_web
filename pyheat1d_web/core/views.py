@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url
@@ -117,17 +116,19 @@ def delete_simulation(request, pk):
     return HttpResponseRedirect(url_out)
 
 
-def results_simulation(request, pk):
+def _read_results(base_dir):
+    results_file = base_dir / "results.json"
+    return json.load(results_file.open())
 
+
+def results_simulation(request, pk):
     sim = get_object_or_404(Simulation, pk=pk)
 
     if sim.status == Simulation.Status.SUCCESS:
         input_file = Path(sim.input_file)
         base_dir = input_file.parent
-        graphs = {}
-        results_file = base_dir / "results.json"
-        results = json.load(results_file.open())
-        isteps = [ round(r["t"], 6) for r in results]
+        results = _read_results(base_dir)
+        isteps = [round(r["t"], 6) for r in results]
 
         endpoint = f"/api/results/{pk}/?{request.GET.urlencode()}" if request.GET.urlencode() else f"/api/results/{pk}/"
 

@@ -525,6 +525,20 @@ files = [
 tests = ["asttokens (>=2.1.0)", "coverage", "coverage-enable-subprocess", "ipython", "littleutils", "pytest", "rich"]
 
 [[package]]
+name = "faker"
+version = "23.0.0"
+description = "Faker is a Python package that generates fake data for you."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "Faker-23.0.0-py3-none-any.whl", hash = "sha256:8ca62b41b83bc6bcebe4ec5e7535405881fbd5ef69c6df933550de7111099575"},
+    {file = "Faker-23.0.0.tar.gz", hash = "sha256:f508c6a131f2cff8594f66f218f6674d3a78488455fd73ffd8c684efae4dc4d3"},
+]
+
+[package.dependencies]
+python-dateutil = ">=2.4"
+
+[[package]]
 name = "filelock"
 version = "3.13.1"
 description = "A platform independent file lock."
@@ -1005,6 +1019,24 @@ files = [
     {file = "mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"},
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
 ]
+
+[[package]]
+name = "model-bakery"
+version = "1.17.0"
+description = "Smart object creation facility for Django."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "model_bakery-1.17.0-py3-none-any.whl", hash = "sha256:1d26f1a7043c46e6729145b964a7740bf8f6dddac16510fd18323a1492fba757"},
+    {file = "model_bakery-1.17.0.tar.gz", hash = "sha256:fe808132cd966164600f0450cc05b3cfa50c6c062e00f739a861c5a4b9f236ca"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+
+[package.extras]
+docs = ["sphinx", "sphinx-rtd-theme"]
+test = ["black", "coverage", "mypy", "pillow", "pytest", "pytest-django", "ruff"]
 
 [[package]]
 name = "mslex"
@@ -1939,4 +1971,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "655489f0881c23cadbfbb3f6b8ca35edebe46a6431f7344c914df1b00970e7e8"
+content-hash = "439c9f38375995b5277ebc5d52dbaabc1c5980faa784bab0e269e6a364292755"

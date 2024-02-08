@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-10">
+      <div class="shadow mt-4 p-4 rounded bg-light">
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{% url 'accounts:login' %}">
+        {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}">
+          <div class="mb-2 row">
+            <label class="col-sm-6 col-form-label" for="{{ form.username.id_for_label }}" >{{form.username.label_tag}}</label>
+            <div class="col-sm-6">
+              {{ form.username }}
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label class="col-sm-6 col-form-label" for="{{ form.password.id_for_label }}" >{{form.password.label_tag}}</label>
+            <div class="col-sm-6">
+                {{ form.password }}
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">login</button>
+        </form>
+
+        {# Assumes you set up the password_reset view in your URLconf #}
+        {# <p><a href="{% url 'password_reset' %}">Lost password?</a></p> #}
+
+      </div>
+      {% if form.errors %}
+      <div class="mt-2">
+        <p class="alert alert-danger">Your username and password didn't match. Please try again.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock main %}

@@ -12,11 +12,17 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url "core:create_simulation_form" %}">Nova Simulação</a>
         </li>
+        <a class="nav-link active" aria-current="page" href="{% url 'accounts:login' %}">login</a>
+        <form class="d-flex" method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button class="nav-link active" type="submit">Logout</button>
+        </form>
       </ul>
-      {% comment %} <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Tag" aria-label="Search">
-        <button class="btn btn-success text-light" type="submit">Procurar</button>
-      </form> {% endcomment %}
     </div>
   </div>
 </nav>
+
+{% comment %} <form class="d-flex">
+  <input class="form-control me-2" type="search" placeholder="Tag" aria-label="Search">
+  <button class="btn btn-success text-light" type="submit">Procurar</button>
+</form> {% endcomment %}

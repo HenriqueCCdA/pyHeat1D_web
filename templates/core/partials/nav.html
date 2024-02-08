@@ -12,11 +12,30 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url "core:create_simulation_form" %}">Nova Simulação</a>
         </li>
-        <a class="nav-link active" aria-current="page" href="{% url 'accounts:login' %}">login</a>
-        <form class="d-flex" method="post" action="{% url 'accounts:logout' %}">
-          {% csrf_token %}
-          <button class="nav-link active" type="submit">Logout</button>
-        </form>
+      </ul>
+
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person"></i> {{ user.name }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Perfil</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form class="d-flex" method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button class="dropdown-item" type="submit">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'accounts:login' %}">Login</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>

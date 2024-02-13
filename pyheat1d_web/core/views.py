@@ -25,7 +25,7 @@ def create_simulation_form(request):
             )
         case_new = create_or_update_simulation_case(form.cleaned_data.copy())
         form.instance.input_file = str(case_new)
-
+        form.instance.user = request.user
         form.save()
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))

@@ -6,7 +6,7 @@ from pyheat1d_web.core.models import Simulation
 
 
 @pytest.fixture
-def simulation(db):
+def simulation(user):
     sim = Simulation.objects.create(
         tag="sim_01",
         input_file="analisys/sim_01/case.json",
@@ -17,13 +17,14 @@ def simulation(db):
         initialt=10.0,
         lbc_value=10.0,
         rbc_value=10.0,
+        user=user,
     )
 
     return sim
 
 
 @pytest.fixture
-def list_simulation(db):
+def list_simulation(user):
     sim1 = Simulation(
         tag="sim_01",
         input_file="analisys/sim_01/case.json",
@@ -34,6 +35,7 @@ def list_simulation(db):
         initialt=10.0,
         lbc_value=10.0,
         rbc_value=10.0,
+        user=user,
     )
 
     sim2 = Simulation(
@@ -46,6 +48,7 @@ def list_simulation(db):
         initialt=50.0,
         lbc_value=10.0,
         rbc_value=10.0,
+        user=user,
     )
 
     return Simulation.objects.bulk_create([sim1, sim2])

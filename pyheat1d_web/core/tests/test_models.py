@@ -15,6 +15,7 @@ def test_model_fiels(simulation):
     assert simulation._meta.get_field("dt")
     assert simulation._meta.get_field("nstep")
     assert simulation._meta.get_field("initialt")
+    assert simulation._meta.get_field("user")
     assert simulation._meta.get_field("lbc_value")
     assert simulation._meta.get_field("rbc_value")
     assert simulation._meta.get_field("celery_task")
@@ -36,3 +37,9 @@ def test_str(simulation):
 @pytest.mark.unit
 def test_default(simulation):
     assert simulation.status == Simulation.Status.INIT
+
+
+@pytest.mark.unit
+def test_relationship(list_simulation, user):
+    assert list_simulation[0].user == user
+    assert set(user.simulation_set.all()) == set(list_simulation)

@@ -21,21 +21,21 @@ def create_or_update_simulation_case(new_case, indent=2, input_file=None):
         Path: Retorna o caminho do aquivo criado
     """
 
-    new_case = new_case.copy()
+    case = new_case.copy()
 
     bcs = {
-        "lbc": {"type": 1, "params": {"value": new_case.pop("lbc_value")}},
-        "rbc": {"type": 1, "params": {"value": new_case.pop("rbc_value")}},
+        "lbc": {"type": 1, "params": {"value": case.pop("lbc_value")}},
+        "rbc": {"type": 1, "params": {"value": case.pop("rbc_value")}},
     }
 
     props = {"k": 1.0, "ro": 1.0, "cp": 1.0}
 
-    new_case.update(bcs)
-    new_case.update({"prop": props, "write_every_steps": 100})
+    case.update(bcs)
+    case.update({"prop": props, "write_every_steps": 100})
 
     if not input_file:
         base_folder = _get_simulations_base_folder()
-        tag = new_case.pop("tag")
+        tag = case.pop("tag")
         simulation_folder = base_folder / tag
         if not simulation_folder.exists():
             simulation_folder.mkdir(parents=True)
@@ -44,7 +44,7 @@ def create_or_update_simulation_case(new_case, indent=2, input_file=None):
         case_file = input_file
 
     # TODO: trata a exceção
-    json.dump(new_case, case_file.open(mode="w"), indent=indent)
+    json.dump(case, case_file.open(mode="w"), indent=indent)
 
     return case_file
 

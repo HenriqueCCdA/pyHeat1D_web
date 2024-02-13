@@ -7,9 +7,23 @@ from pytest_django.asserts import assertRedirects
 
 from pyheat1d_web.core.models import Simulation
 
+view_name = "core:delete_simulation"
+
 
 @pytest.mark.integration
-def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
+def test_user_must_be_logged(client, simulation):
+    url = resolve_url(view_name, pk=simulation.pk)
+    resp = client.get(url)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={url}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_delete_simulation(client_logged, mocker, simulation, tmp_path):
     case_folder_base = Path(tmp_path)
 
     tag = simulation.tag
@@ -26,7 +40,7 @@ def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
 
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
-    resp = client.get(resolve_url("core:delete_simulation", pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url("core:list_simulation"))
@@ -37,15 +51,15 @@ def test_positive_delete_simulation(client, mocker, simulation, tmp_path):
 
 
 @pytest.mark.integration
-def test_negative_wrong_id(client, db):
-    resp = client.get(resolve_url("core:delete_simulation", pk=404))
+def test_negative_wrong_id(client_logged, db):
+    resp = client_logged.get(resolve_url(view_name, pk=404))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url("core:list_simulation"))
 
 
 @pytest.mark.integration
-def test_negative_delete_dir_not_empty(client, mocker, simulation, tmp_path):
+def test_negative_delete_dir_not_empty(client_logged, mocker, simulation, tmp_path):
     case_folder_base = Path(tmp_path)
 
     tag = simulation.tag
@@ -62,7 +76,7 @@ def test_negative_delete_dir_not_empty(client, mocker, simulation, tmp_path):
 
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
-    resp = client.get(resolve_url("core:delete_simulation", pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url("core:list_simulation"))

@@ -8,10 +8,24 @@ from pytest_django.asserts import assertContains, assertRedirects, assertTemplat
 from pyheat1d_web.core.models import Simulation
 from pyheat1d_web.core.tests.constants import EDIT_CASE_FILE
 
+view_name = "core:edit_simulation_form"
+
 
 @pytest.mark.integration
-def test_positive_template_used(client, simulation):
-    resp = client.get(resolve_url("core:edit_simulation_form", pk=simulation.pk))
+def test_user_must_be_logged(client, simulation):
+    url = resolve_url(view_name, pk=simulation.pk)
+    resp = client.get(url)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={url}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_template_used(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -19,8 +33,8 @@ def test_positive_template_used(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_must_have_buttons_criar_voltar(client, simulation):
-    resp = client.get(resolve_url("core:edit_simulation_form", pk=simulation.pk))
+def test_positive_must_have_buttons_criar_voltar(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -32,15 +46,12 @@ def test_positive_must_have_buttons_criar_voltar(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_edit(client, file_case, simulation, payload_edit):
+def test_positive_edit(client_logged, file_case, simulation, payload_edit):
     simulation.input_file = file_case
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
 
-    resp = client.post(
-        resolve_url("core:edit_simulation_form", pk=simulation.pk),
-        data=payload_edit,
-    )
+    resp = client_logged.post(resolve_url(view_name, pk=simulation.pk), data=payload_edit)
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url("core:list_simulation"))

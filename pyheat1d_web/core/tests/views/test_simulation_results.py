@@ -2,14 +2,28 @@ from http import HTTPStatus
 
 import pytest
 from django.shortcuts import resolve_url
-from pytest_django.asserts import assertContains, assertTemplateUsed
+from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
 
 from pyheat1d_web.core.models import Simulation
 
+view_name = "core:results_simulation"
+
 
 @pytest.mark.integration
-def test_positive_template_used(client, simulation):
-    resp = client.get(resolve_url("core:results_simulation", pk=simulation.pk))
+def test_user_must_be_logged(client, simulation):
+    url = resolve_url(view_name, pk=simulation.pk)
+    resp = client.get(url)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={url}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_template_used(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -17,8 +31,8 @@ def test_positive_template_used(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_button_voltar(client, simulation):
-    resp = client.get(resolve_url("core:results_simulation", pk=simulation.pk))
+def test_positive_button_voltar(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -29,13 +43,13 @@ def test_positive_button_voltar(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_api_url_with_be_status_success(client, mocker, simulation):
+def test_positive_api_url_with_be_status_success(client_logged, mocker, simulation):
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
 
     results_mocker = mocker.patch("pyheat1d_web.core.views._read_results")
 
-    resp = client.get(resolve_url("core:results_simulation", pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
     assert resp.status_code == HTTPStatus.OK
 
     assertContains(resp, f"/api/results/{simulation.pk}")
@@ -44,20 +58,20 @@ def test_positive_api_url_with_be_status_success(client, mocker, simulation):
 
 
 @pytest.mark.integration
-def test_positive_without_be_status_success(client, simulation):
-    resp = client.get(resolve_url("core:results_simulation", pk=simulation.pk))
+def test_positive_without_be_status_success(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
     assert resp.status_code == HTTPStatus.OK
 
     assertContains(resp, "Não existe resultados disponíveis para essa simulação ainda.")
 
 
 @pytest.mark.integration
-def test_graph_div(client, mocker, simulation):
+def test_graph_div(client_logged, mocker, simulation):
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
     results_mocker = mocker.patch("pyheat1d_web.core.views._read_results")
 
-    resp = client.get(resolve_url("core:results_simulation", pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 

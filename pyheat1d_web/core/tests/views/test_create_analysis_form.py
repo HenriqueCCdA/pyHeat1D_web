@@ -13,8 +13,19 @@ URL = resolve_url("core:create_simulation_form")
 
 
 @pytest.mark.integration
-def test_positive_template_used(client):
+def test_user_must_be_logged(client):
     resp = client.get(URL)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={URL}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_template_used(client_logged):
+    resp = client_logged.get(URL)
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -22,8 +33,8 @@ def test_positive_template_used(client):
 
 
 @pytest.mark.integration
-def test_positive_must_have_buttons_criar_voltar(client):
-    resp = client.get(URL)
+def test_positive_must_have_buttons_criar_voltar(client_logged):
+    resp = client_logged.get(URL)
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -35,8 +46,8 @@ def test_positive_must_have_buttons_criar_voltar(client):
 
 
 @pytest.mark.integration
-def test_must_have_8_inputs(client):
-    resp = client.get(URL)
+def test_must_have_8_inputs(client_logged):
+    resp = client_logged.get(URL)
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -54,10 +65,10 @@ def test_must_have_8_inputs(client):
 
 
 @pytest.mark.integration
-def test_positive_create(client, db, tmp_path, mocker, payload_create):
+def test_positive_create(client_logged, db, tmp_path, mocker, payload_create):
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 
-    resp = client.post(URL, data=payload_create)
+    resp = client_logged.post(URL, data=payload_create)
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url("core:list_simulation"))
@@ -79,11 +90,11 @@ def test_positive_create(client, db, tmp_path, mocker, payload_create):
 
 
 @pytest.mark.integration
-def test_negative_create_missing_inputs(client, payload_create, db):
+def test_negative_create_missing_inputs(client_logged, payload_create, db):
     data = payload_create.copy()
     del data["tag"]
 
-    resp = client.post(URL, data=data)
+    resp = client_logged.post(URL, data=data)
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -96,10 +107,10 @@ def test_negative_create_missing_inputs(client, payload_create, db):
 
 
 @pytest.mark.integration
-def test_negative_create_simulation_tag_name_must_be_unique(client, payload_create, simulation):
+def test_negative_create_simulation_tag_name_must_be_unique(client_logged, payload_create, simulation):
     data = payload_create.copy()
 
-    resp = client.post(URL, data=data)
+    resp = client_logged.post(URL, data=data)
 
     assert resp.status_code == HTTPStatus.OK
 

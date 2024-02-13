@@ -2,12 +2,26 @@ from http import HTTPStatus
 
 import pytest
 from django.shortcuts import resolve_url
-from pytest_django.asserts import assertContains, assertTemplateUsed
+from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
+
+view_name = "core:detail_simulation"
 
 
 @pytest.mark.integration
-def test_positive_template_used(client, simulation):
-    resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
+def test_user_must_be_logged(client, simulation):
+    url = resolve_url(view_name, pk=simulation.pk)
+    resp = client.get(url)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={url}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_template_used(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -15,8 +29,8 @@ def test_positive_template_used(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_must_have_buttons_voltar(client, simulation):
-    resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
+def test_positive_must_have_buttons_voltar(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -28,8 +42,8 @@ def test_positive_must_have_buttons_voltar(client, simulation):
 
 
 @pytest.mark.integration
-def test_table(client, simulation):
-    resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
+def test_table(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
 
@@ -49,8 +63,8 @@ def test_table(client, simulation):
 
 
 @pytest.mark.integration
-def test_table_value(client, simulation):
-    resp = client.get(resolve_url("core:detail_simulation", pk=simulation.pk))
+def test_table_value(client_logged, simulation):
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.OK
     assertContains(resp, simulation.pk)

@@ -8,8 +8,7 @@ URL = resolve_url("accounts:logout")
 
 
 @pytest.mark.integration
-def test_positive_post(client, user_logged):
-    resp = client.post(URL)
+def test_positive_post(client_logged):
+    resp = client_logged.post(URL)
     assert resp.status_code == HTTPStatus.FOUND
-
-    assertRedirects(resp, "/")
+    assertRedirects(resp, resolve_url("accounts:login"))

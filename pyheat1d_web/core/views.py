@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url
 
@@ -11,6 +12,7 @@ from .services import create_or_update_simulation_case, delete_simulation_folder
 from .tasks import run_simulation as run_simulation_task
 
 
+@login_required
 def create_simulation_form(request):
     if request.method == "POST":
         form = NewSimulationForm(request.POST)
@@ -33,6 +35,7 @@ def create_simulation_form(request):
     return render(request, "core/create_simulation_form.html", context={"form": form})
 
 
+@login_required
 def run_simulation(request, pk):
     url_out = resolve_url("core:list_simulation")
 
@@ -59,6 +62,7 @@ def run_simulation(request, pk):
     return HttpResponseRedirect(url_out)
 
 
+@login_required
 def list_simulation(request):
     sim = Simulation.objects.all().order_by("tag")
     return render(request, "core/list_simulation.html", context={"analysis": sim})
@@ -88,6 +92,7 @@ def _recover_info_detail_from_db(sim):
     }
 
 
+@login_required
 def detail_simulation(request, pk):
     sim = Simulation.objects.get(id=pk)
 
@@ -96,6 +101,7 @@ def detail_simulation(request, pk):
     return render(request, "core/detail_simulation.html", context=context)
 
 
+@login_required
 def delete_simulation(request, pk):
     url_out = resolve_url("core:list_simulation")
 
@@ -121,6 +127,7 @@ def _read_results(base_dir):
     return json.load(results_file.open())
 
 
+@login_required
 def results_simulation(request, pk):
     sim = get_object_or_404(Simulation, pk=pk)
 
@@ -146,6 +153,7 @@ def results_simulation(request, pk):
     return render(request, "core/results_simulation.html", context)
 
 
+@login_required
 def edit_simulation_form(request, pk):
     sim = get_object_or_404(Simulation, id=pk)
 

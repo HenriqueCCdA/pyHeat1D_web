@@ -12,7 +12,19 @@ redirect_view_name = "core:list_simulation"
 
 
 @pytest.mark.integration
-def test_positive_init_status(client, mocker, simulation):
+def test_user_must_be_logged(client, simulation):
+    url = resolve_url(view_name, pk=simulation.pk)
+    resp = client.get(url)
+
+    assert resp.status_code == HTTPStatus.FOUND
+
+    url_login = f"{resolve_url('accounts:login')}?next={url}"
+
+    assertRedirects(resp, url_login)
+
+
+@pytest.mark.integration
+def test_positive_init_status(client_logged, mocker, simulation):
     AsyncResultMock = type("AsyncResultMock", (), {"id": uuid4()})
 
     run_simulation_task_delay = mocker.patch(
@@ -20,7 +32,7 @@ def test_positive_init_status(client, mocker, simulation):
         return_value=AsyncResultMock,
     )
 
-    resp = client.get(resolve_url(view_name, pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url(redirect_view_name))
@@ -47,13 +59,13 @@ def test_positive_init_status(client, mocker, simulation):
         Simulation.Status.SUCCESS.label,
     ],
 )
-def test_negative_should_be_called_only_to_the_init_status(client, mocker, simulation, status):
+def test_negative_should_be_called_only_to_the_init_status(client_logged, mocker, simulation, status):
     run_simulation_task = mocker.patch("pyheat1d_web.core.views.run_simulation_task")
 
     simulation.status = status
     simulation.save()
 
-    resp = client.get(resolve_url(view_name, pk=simulation.pk))
+    resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url(redirect_view_name))
@@ -65,11 +77,11 @@ def test_negative_should_be_called_only_to_the_init_status(client, mocker, simul
     assert simulation.celery_task is None
 
 
-def test_negative_wrong_id(client, mocker, db):
+def test_negative_wrong_id(client_logged, mocker, db):
     run_simulation_task = mocker.patch("pyheat1d_web.core.views.run_simulation_task")
 
     url = resolve_url(view_name, pk=404)
-    resp = client.get(url)
+    resp = client_logged.get(url)
 
     assert resp.status_code == HTTPStatus.FOUND
     assertRedirects(resp, resolve_url(redirect_view_name))

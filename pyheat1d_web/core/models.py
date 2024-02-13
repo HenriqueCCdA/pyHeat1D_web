@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -39,6 +40,8 @@ class Simulation(BaseModel):
     rbc_value = models.FloatField("Temperatura a direita", default=-10.0)
 
     celery_task = models.UUIDField(null=True, blank=True)
+
+    user = models.ForeignKey(get_user_model(), verbose_name="user", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.tag

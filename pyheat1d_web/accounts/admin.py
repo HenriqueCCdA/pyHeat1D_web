@@ -3,9 +3,19 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from pyheat1d_web.accounts.models import CustomUser as User
+from pyheat1d_web.core.models import Simulation
+
+
+class SimulationInline(admin.StackedInline):
+    model = Simulation
+    fields = ["tag"]
+    readonly_fields = ["tag"]
+    extra = 0
 
 
 class UserAdmin(UserAdmin):
+    inlines = [SimulationInline]
+
     fieldsets = (
         (
             None,

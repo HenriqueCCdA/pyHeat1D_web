@@ -65,7 +65,7 @@ def test_must_have_8_inputs(client_logged):
 
 
 @pytest.mark.integration
-def test_positive_create(client_logged, db, tmp_path, mocker, payload_create):
+def test_positive_create(client_logged, user_with_password, tmp_path, mocker, payload_create):
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=Path(tmp_path))
 
     resp = client_logged.post(URL, data=payload_create)
@@ -77,6 +77,8 @@ def test_positive_create(client_logged, db, tmp_path, mocker, payload_create):
 
     for key in payload_create.keys():
         assert getattr(simulation, key) == payload_create[key]
+
+    assert simulation.user == user_with_password
 
     assert simulation.status == "I"
 

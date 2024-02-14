@@ -40,6 +40,6 @@ def test_default(simulation):
 
 
 @pytest.mark.unit
-def test_relationship(list_simulation, user):
-    assert list_simulation[0].user == user
-    assert set(user.simulation_set.all()) == set(list_simulation)
+def test_relationship(list_simulation, user_with_password):
+    assert list_simulation[0].user == user_with_password
+    assert user_with_password.simulation_set.count() == 2

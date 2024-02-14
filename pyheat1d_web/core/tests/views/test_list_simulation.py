@@ -30,7 +30,6 @@ def test_positive_template_used(client_logged, simulation):
 @pytest.mark.integration
 def test_positive_table_list_simulation_two_simulation(client_logged, list_simulation):
     resp = client_logged.get(URL)
-
     assert resp.status_code == HTTPStatus.OK
 
     assertContains(resp, "Id")

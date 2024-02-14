@@ -14,6 +14,11 @@ def user(db):
 
 
 @pytest.fixture
+def other_user(user):
+    return baker.make(User)
+
+
+@pytest.fixture
 def user_with_password(db):
     password = fake.password()
     user = User.objects.create(email=fake.email(), password=password)

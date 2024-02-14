@@ -64,7 +64,7 @@ def run_simulation(request, pk):
 
 @login_required
 def list_simulation(request):
-    sim = Simulation.objects.all().order_by("tag")
+    sim = Simulation.objects.filter(user=request.user).order_by("tag")
     return render(request, "core/list_simulation.html", context={"analysis": sim})
 
 

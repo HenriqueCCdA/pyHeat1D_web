@@ -24,7 +24,7 @@ def simulation(user):
 
 
 @pytest.fixture
-def list_simulation(user):
+def list_simulation(user_with_password, other_user):
     sim1 = Simulation(
         tag="sim_01",
         input_file="analisys/sim_01/case.json",
@@ -35,7 +35,7 @@ def list_simulation(user):
         initialt=10.0,
         lbc_value=10.0,
         rbc_value=10.0,
-        user=user,
+        user=user_with_password,
     )
 
     sim2 = Simulation(
@@ -48,10 +48,23 @@ def list_simulation(user):
         initialt=50.0,
         lbc_value=10.0,
         rbc_value=10.0,
-        user=user,
+        user=user_with_password,
     )
 
-    return Simulation.objects.bulk_create([sim1, sim2])
+    sim3 = Simulation(
+        tag="sim_03",
+        input_file="analisys/sim_03/case.json",
+        length=20.0,
+        ndiv=245,
+        dt=2.0,
+        nstep=100,
+        initialt=20.0,
+        lbc_value=20.0,
+        rbc_value=0.0,
+        user=other_user,
+    )
+
+    return Simulation.objects.bulk_create([sim1, sim2, sim3])
 
 
 @pytest.fixture

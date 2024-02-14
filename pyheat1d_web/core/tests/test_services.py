@@ -9,12 +9,12 @@ from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE
 
 
 @pytest.mark.unit
-def test_positive_create_file_case(mocker, payload_create, tmp_path):
-    base_folder = Path(tmp_path)
+def test_positive_create_file_case(mocker, user, payload_create, tmp_path):
+    base_folder = Path(tmp_path) / f"{user.pk}"
     mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=base_folder)
 
     new_case = payload_create.copy()
-    file_case = create_or_update_simulation_case(new_case)
+    file_case = create_or_update_simulation_case(new_case, user)
 
     expected = base_folder / "sim_01/case.json"
 
@@ -26,10 +26,10 @@ def test_positive_create_file_case(mocker, payload_create, tmp_path):
 
 
 @pytest.mark.unit
-def test_positive_update_file_case(file_case, simulation, payload_edit):
+def test_positive_update_file_case(file_case, user, simulation, payload_edit):
     new_case = payload_edit.copy()
 
-    update_file_case = create_or_update_simulation_case(new_case, input_file=file_case)
+    update_file_case = create_or_update_simulation_case(new_case, user, input_file=file_case)
 
     assert update_file_case == file_case
 
@@ -40,7 +40,7 @@ def test_positive_update_file_case(file_case, simulation, payload_edit):
 
 @pytest.mark.unit
 def test_get_simulations_base_folder():
-    assert str(_get_simulations_base_folder()) == "analisys"
+    assert str(_get_simulations_base_folder(2)) == "analisys/2"
 
 
 @pytest.mark.unit

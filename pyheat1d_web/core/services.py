@@ -4,16 +4,17 @@ from pathlib import Path
 from django.conf import settings
 
 
-def _get_simulations_base_folder():
-    return Path(settings.MEDIA_ROOT)
+def _get_simulations_base_folder(pk):
+    return Path(settings.MEDIA_ROOT) / f"{pk}"
 
 
-def create_or_update_simulation_case(new_case, indent=2, input_file=None):
+def create_or_update_simulation_case(new_case, user, indent=2, input_file=None):
     """Cria ou atualiza o arquivo de caso.json. Caso input_file seja diferente de None
     o arquivo será atualizado
 
     Args:
-        new_case (Dict): Dicionario com os dados das análises da interface web
+        new_case (Dict): Dicionario com os dados das análises da interface web.
+        user (User): Usuário dono da analise.
         indent (int, optional): Indentação do json. Defaults to 2.
         input_file (Path, optional): O caminho do aquivo se ele já existir case.json. Defaults to None.
 
@@ -34,7 +35,7 @@ def create_or_update_simulation_case(new_case, indent=2, input_file=None):
     case.update({"prop": props, "write_every_steps": 100})
 
     if not input_file:
-        base_folder = _get_simulations_base_folder()
+        base_folder = _get_simulations_base_folder(user.pk)
         tag = case.pop("tag")
         simulation_folder = base_folder / tag
         if not simulation_folder.exists():

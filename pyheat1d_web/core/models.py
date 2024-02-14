@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
+# TODO: Reti
 class BaseModel(models.Model):
     created_at = models.DateTimeField("Data de criação", auto_now_add=True)
     modified_at = models.DateTimeField("Data de modificação", auto_now=True)

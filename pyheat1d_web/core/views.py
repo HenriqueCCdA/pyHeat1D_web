@@ -23,9 +23,10 @@ def create_simulation_form(request):
                 "core/create_simulation_form.html",
                 context={"form": form},
             )
-        case_new = create_or_update_simulation_case(form.cleaned_data.copy())
+        user = request.user
+        case_new = create_or_update_simulation_case(form.cleaned_data.copy(), user=user)
         form.instance.input_file = str(case_new)
-        form.instance.user = request.user
+        form.instance.user = user
         form.save()
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
@@ -171,7 +172,7 @@ def edit_simulation_form(request, pk):
         form.save()
 
         case_data = form.cleaned_data.copy()
-        create_or_update_simulation_case(case_data, input_file=Path(sim.input_file))
+        create_or_update_simulation_case(case_data, form.instance.user, input_file=Path(sim.input_file))
         messages.success(request, f"Dados da simulação atualizados {sim.tag}")
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:

@@ -36,3 +36,12 @@ def user_logged(client, user_with_password):
 def client_logged(client, user_with_password):
     client.force_login(user_with_password)
     return client
+
+
+@pytest.fixture(autouse=True)
+def analisys_folder(settings, tmp_path):
+    base_folder = tmp_path / "analisys"
+
+    settings.MEDIA_ROOT = base_folder
+
+    return base_folder

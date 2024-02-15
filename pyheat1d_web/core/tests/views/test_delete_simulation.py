@@ -1,11 +1,11 @@
 from http import HTTPStatus
-from pathlib import Path
 
 import pytest
 from django.shortcuts import resolve_url
 from pytest_django.asserts import assertRedirects
 
 from pyheat1d_web.core.models import Simulation
+from pyheat1d_web.core.services import _get_simulations_base_folder
 
 view_name = "core:delete_simulation"
 
@@ -23,11 +23,11 @@ def test_user_must_be_logged(client, simulation):
 
 
 @pytest.mark.integration
-def test_positive_delete_simulation(client_logged, mocker, simulation, tmp_path):
-    case_folder_base = Path(tmp_path)
+def test_positive_delete_simulation(client_logged, simulation):
+    case_folder_base = _get_simulations_base_folder(simulation.pk)
 
     tag = simulation.tag
-    simulation_folder = case_folder_base / f"analisys/{tag}"
+    simulation_folder = case_folder_base / tag
     simulation_case_file = simulation_folder / "case.json"
 
     simulation_folder.mkdir(parents=True)
@@ -37,8 +37,6 @@ def test_positive_delete_simulation(client_logged, mocker, simulation, tmp_path)
 
     simulation.input_file = simulation_case_file
     simulation.save()
-
-    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
     resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 
@@ -59,11 +57,11 @@ def test_negative_wrong_id(client_logged, db):
 
 
 @pytest.mark.integration
-def test_negative_delete_dir_not_empty(client_logged, mocker, simulation, tmp_path):
-    case_folder_base = Path(tmp_path)
+def test_negative_delete_dir_not_empty(client_logged, simulation, tmp_path):
+    case_folder_base = _get_simulations_base_folder(simulation.pk)
 
     tag = simulation.tag
-    simulation_folder = case_folder_base / f"analisys/{tag}"
+    simulation_folder = case_folder_base / tag
     simulation_case_file = simulation_folder / "case.json"
 
     simulation_folder.mkdir(parents=True)
@@ -73,8 +71,6 @@ def test_negative_delete_dir_not_empty(client_logged, mocker, simulation, tmp_pa
 
     simulation.input_file = simulation_case_file
     simulation.save()
-
-    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=case_folder_base)
 
     resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 

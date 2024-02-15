@@ -1,12 +1,12 @@
 import json
 from http import HTTPStatus
-from pathlib import Path
 
 import pytest
 from django.shortcuts import resolve_url
 from pytest_django.asserts import assertContains, assertRedirects, assertTemplateUsed
 
 from pyheat1d_web.core.models import Simulation
+from pyheat1d_web.core.services import _get_simulations_base_folder
 from pyheat1d_web.core.tests.constants import CASE_FILE
 
 URL = resolve_url("core:create_simulation_form")
@@ -65,11 +65,8 @@ def test_must_have_8_inputs(client_logged):
 
 
 @pytest.mark.integration
-def test_positive_create(client_logged, user_with_password, tmp_path, mocker, payload_create):
-    mocker.patch(
-        "pyheat1d_web.core.services._get_simulations_base_folder",
-        return_value=Path(tmp_path) / f"{user_with_password.pk}",
-    )
+def test_positive_create(client_logged, user_with_password, payload_create):
+    base_folder = _get_simulations_base_folder(user_with_password.pk)
 
     resp = client_logged.post(URL, data=payload_create)
 
@@ -85,7 +82,7 @@ def test_positive_create(client_logged, user_with_password, tmp_path, mocker, pa
 
     assert simulation.status == "I"
 
-    file_case = Path(tmp_path) / f"{user_with_password.pk}/sim_01/case.json"
+    file_case = base_folder / "sim_01/case.json"
 
     assert file_case.exists()
 

@@ -9,9 +9,8 @@ from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE
 
 
 @pytest.mark.unit
-def test_positive_create_file_case(mocker, user, payload_create, tmp_path):
-    base_folder = Path(tmp_path) / f"{user.pk}"
-    mocker.patch("pyheat1d_web.core.services._get_simulations_base_folder", return_value=base_folder)
+def test_positive_create_file_case(user, payload_create):
+    base_folder = _get_simulations_base_folder(user.pk)
 
     new_case = payload_create.copy()
     file_case = create_or_update_simulation_case(new_case, user)
@@ -39,8 +38,8 @@ def test_positive_update_file_case(file_case, user, simulation, payload_edit):
 
 
 @pytest.mark.unit
-def test_get_simulations_base_folder():
-    assert str(_get_simulations_base_folder(2)) == "analisys/2"
+def test_get_simulations_base_folder(analisys_folder):
+    assert str(_get_simulations_base_folder(2)) == str(analisys_folder / "2")
 
 
 @pytest.mark.unit

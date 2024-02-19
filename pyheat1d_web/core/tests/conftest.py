@@ -6,7 +6,7 @@ from pyheat1d_web.core.models import Simulation
 
 
 @pytest.fixture
-def simulation(user):
+def simulation(user_with_password):
     sim = Simulation.objects.create(
         tag="sim_01",
         input_file="analisys/sim_01/case.json",
@@ -17,7 +17,7 @@ def simulation(user):
         initialt=10.0,
         lbc_value=10.0,
         rbc_value=10.0,
-        user=user,
+        user=user_with_password,
     )
 
     return sim

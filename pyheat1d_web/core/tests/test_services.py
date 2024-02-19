@@ -4,8 +4,16 @@ from pathlib import Path
 
 import pytest
 
-from pyheat1d_web.core.services import _get_simulations_base_folder, cleaned_isteps, create_or_update_simulation_case
-from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE
+from pyheat1d_web.core.services import (
+    ResultFileNotFoundError,
+    _get_simulations_base_folder,
+    cleaned_isteps,
+    create_or_update_simulation_case,
+    read_mesh,
+    read_results,
+    results_times,
+)
+from pyheat1d_web.core.tests.constants import CASE_FILE, EDIT_CASE_FILE, INPUT_CASE_FILE
 
 
 @pytest.mark.unit
@@ -59,3 +67,35 @@ def test_postive_cleaned_isteps():
 def test_negative_invalid_isteps(values, error):
     with pytest.raises(ValueError, match=re.escape(error)):
         cleaned_isteps(values, 50)
+
+
+@pytest.mark.unit
+def test_positive_results_time_path():
+    assert results_times(INPUT_CASE_FILE) == [0.0, 10.0, 20.0, 30.0]
+
+
+@pytest.mark.unit
+def test_positive_results_time_str():
+    assert results_times(str(INPUT_CASE_FILE)) == [0.0, 10.0, 20.0, 30.0]
+
+
+@pytest.mark.unit
+def test_negative_results_times_not_found():
+    input_file_path = Path.cwd() / "wrong/case.json"
+
+    expected = f"Arquivo de resultado não achado no caminho '{input_file_path.parent}'"
+
+    with pytest.raises(ResultFileNotFoundError, match=expected):
+        results_times(input_file_path)
+
+
+@pytest.mark.unit
+def test_read_mesh():
+    base_dir = INPUT_CASE_FILE.parent
+    assert read_mesh(base_dir) == ""
+
+
+@pytest.mark.unit
+def test_read_results():
+    base_dir = INPUT_CASE_FILE.parent
+    assert read_results(base_dir) == ""

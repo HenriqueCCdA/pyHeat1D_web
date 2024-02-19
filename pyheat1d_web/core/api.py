@@ -1,4 +1,3 @@
-import json
 from functools import partial
 from http import HTTPStatus
 from pathlib import Path
@@ -8,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from .models import Simulation
-from .services import cleaned_isteps
+from .services import cleaned_isteps, read_mesh, read_results
 
 
 @require_http_methods(["GET"])
@@ -21,10 +20,10 @@ def simulation_results(request, pk):
         base_dir = input_file.parent
 
         graphs = {}
-        mesh_file = base_dir / "mesh.json"
-        mesh = json.load(mesh_file.open())
-        results_file = base_dir / "results.json"
-        results = json.load(results_file.open())
+
+        mesh = read_mesh(base_dir)
+
+        results = read_results(base_dir)
 
         isteps = [0, len(results) // 2, -1]
 

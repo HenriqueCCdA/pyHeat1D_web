@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 from django.contrib import messages
@@ -9,7 +8,7 @@ from django.shortcuts import get_object_or_404, render, resolve_url
 
 from .forms import EditSimulationForm, NewSimulationForm
 from .models import Simulation
-from .services import create_or_update_simulation_case, delete_simulation_folder
+from .services import create_or_update_simulation_case, delete_simulation_folder, results_times
 from .tasks import run_simulation as run_simulation_task
 
 
@@ -137,21 +136,12 @@ def delete_simulation(request, pk):
     return HttpResponseRedirect(url_out)
 
 
-def _read_results(base_dir):
-    results_file = base_dir / "results.json"
-    return json.load(results_file.open())
-
-
 @login_required
 def results_simulation(request, pk):
     sim = get_object_or_404(Simulation, pk=pk)
 
     if sim.status == Simulation.Status.SUCCESS:
-        # TODO: Extrair para um serviço separado
-        input_file = Path(sim.input_file)
-        base_dir = input_file.parent
-        results = _read_results(base_dir)
-        isteps = [round(r["t"], 6) for r in results]
+        isteps = results_times(sim.input_file)
 
         endpoint = f"/api/results/{pk}/?{request.GET.urlencode()}" if request.GET.urlencode() else f"/api/results/{pk}/"
 

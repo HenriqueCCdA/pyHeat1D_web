@@ -1,3 +1,5 @@
+from pathlib import Path
+
 CASE_FILE = {
     "length": 100.0,
     "ndiv": 10_000,
@@ -21,3 +23,5 @@ EDIT_CASE_FILE = {
     "prop": {"k": 1.0, "ro": 1.0, "cp": 1.0},
     "write_every_steps": 100,
 }
+
+INPUT_CASE_FILE = Path.cwd() / "pyheat1d_web/core/tests/assets/case.json"

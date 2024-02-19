@@ -3,6 +3,7 @@ from pathlib import Path
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url
 
@@ -23,11 +24,24 @@ def create_simulation_form(request):
                 "core/create_simulation_form.html",
                 context={"form": form},
             )
-        user = request.user
-        case_new = create_or_update_simulation_case(form.cleaned_data.copy(), user=user)
-        form.instance.input_file = str(case_new)
-        form.instance.user = user
-        form.save()
+        new_simulation = form.instance
+
+        new_simulation.user = request.user
+        try:
+            new_simulation.validate_constraints()
+        except ValidationError as e:
+            for msg in e.messages:
+                messages.error(request, msg)
+            return render(
+                request,
+                "core/create_simulation_form.html",
+                context={"form": form},
+            )
+
+        # TODO: Tratar o erros que pode contantecer na funcao create
+        case_new = create_or_update_simulation_case(form.cleaned_data.copy(), user=request.user)
+        new_simulation.input_file = str(case_new)
+        new_simulation.save()
 
         return HttpResponseRedirect(resolve_url("core:list_simulation"))
     else:
@@ -133,6 +147,7 @@ def results_simulation(request, pk):
     sim = get_object_or_404(Simulation, pk=pk)
 
     if sim.status == Simulation.Status.SUCCESS:
+        # TODO: Extrair para um serviço separado
         input_file = Path(sim.input_file)
         base_dir = input_file.parent
         results = _read_results(base_dir)

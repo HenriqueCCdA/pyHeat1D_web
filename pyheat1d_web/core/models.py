@@ -28,7 +28,7 @@ class Simulation(BaseModel):
     input_file = models.CharField(max_length=1024)
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.INIT)
 
-    tag = models.SlugField("Tag", unique=True)
+    tag = models.SlugField("Tag")
 
     length = models.FloatField("Comprimento", default=1.0, validators=[greater_than_zero])
     ndiv = models.IntegerField("Numero de divisões", default=1_000, validators=[greater_than_zero])
@@ -43,6 +43,9 @@ class Simulation(BaseModel):
     celery_task = models.UUIDField(null=True, blank=True)
 
     user = models.ForeignKey(get_user_model(), verbose_name="user", on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["tag", "user"], name="unique_tag_user")]
 
     def __str__(self):
         return self.tag

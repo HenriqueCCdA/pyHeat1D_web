@@ -118,7 +118,5 @@ def test_negative_create_simulation_tag_name_must_be_unique(client_logged, paylo
 
     assert Simulation.objects.count() == 1
 
-    assert resp.context["form"]["tag"].errors == ["Simulation com este Tag já existe."]
-
-    assertContains(resp, "Erro na hora da criação da simulação.")
-    assertContains(resp, "Simulation com este Tag já existe.")
+    assertContains(resp, "Simulation com este Tag e User já existe.")
+    # assertContains(resp, "Simulation com este Tag já existe.")

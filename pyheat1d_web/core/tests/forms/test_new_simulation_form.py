@@ -60,12 +60,3 @@ def test_negative_invalid_value(payload_create, field, value, error, db):
     assert not form.is_valid()
 
     assert form.errors[field] == [error]
-
-
-@pytest.mark.unit
-def test_negative_tag_must_be_unique(payload_create, simulation):
-    form = NewSimulationForm(payload_create)
-
-    assert not form.is_valid()
-
-    assert form.errors == {"tag": ["Simulation com este Tag já existe."]}

@@ -47,7 +47,7 @@ def test_positive_api_url_with_be_status_success(client_logged, mocker, simulati
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
 
-    results_mocker = mocker.patch("pyheat1d_web.core.views._read_results")
+    results_mocker = mocker.patch("pyheat1d_web.core.views.results_times")
 
     resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
     assert resp.status_code == HTTPStatus.OK
@@ -69,7 +69,7 @@ def test_positive_without_be_status_success(client_logged, simulation):
 def test_graph_div(client_logged, mocker, simulation):
     simulation.status = Simulation.Status.SUCCESS
     simulation.save()
-    results_mocker = mocker.patch("pyheat1d_web.core.views._read_results")
+    results_mocker = mocker.patch("pyheat1d_web.core.views.results_times")
 
     resp = client_logged.get(resolve_url(view_name, pk=simulation.pk))
 

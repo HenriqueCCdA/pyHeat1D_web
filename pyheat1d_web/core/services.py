@@ -4,6 +4,12 @@ from pathlib import Path
 from django.conf import settings
 
 
+class ResultFileNotFoundError(FileNotFoundError):
+    def __init__(self, input_file_path):
+        msg = f"Arquivo de resultado não achado no caminho '{input_file_path}'"
+        super().__init__(msg)
+
+
 def _get_simulations_base_folder(pk):
     return Path(settings.MEDIA_ROOT) / f"{pk}"
 
@@ -97,3 +103,36 @@ def cleaned_isteps(query_list, max_istep):
         isteps.append(n)
 
     return isteps
+
+
+def read_mesh(base_folder):
+    mesh_file_path = base_folder / "mesh.json"
+    return json.load(mesh_file_path.open())
+
+
+def read_results(base_folder):
+    result_file_path = base_folder / "results.json"
+    return json.load(result_file_path.open())
+
+
+def results_times(input_file_path):
+    """Le o arquivo de resultados obtem os tempos
+
+    Args:
+        input_file_path (str| Path): Caminho do arquivo de resultados
+
+    Returns:
+        list[float]: Lista com os tempos
+    """
+
+    if isinstance(input_file_path, str):
+        input_file_path = Path(input_file_path)
+
+    folder_base = input_file_path.parent
+
+    try:
+        results = read_results(folder_base)
+    except FileNotFoundError as e:
+        raise ResultFileNotFoundError(folder_base) from e
+
+    return [round(r["t"], 6) for r in results]

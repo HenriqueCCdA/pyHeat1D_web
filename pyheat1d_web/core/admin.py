@@ -4,7 +4,7 @@ from .models import Simulation
 
 
 @admin.register(Simulation)
-class PetAdmin(admin.ModelAdmin):
+class SimulatioAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "tag",

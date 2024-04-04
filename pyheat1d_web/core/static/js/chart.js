@@ -48,3 +48,16 @@ function plot(data) {
     options:configs,
   });
 }
+
+const endpoint = document.currentScript.dataset.endpoint
+
+$.ajax({
+  method: "GET",
+  url: endpoint,
+  success: function(data) {
+    plot(data);
+  },
+  error: function(error_data) {
+    console.log(error_data);
+  }
+})

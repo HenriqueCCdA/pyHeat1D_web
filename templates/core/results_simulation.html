@@ -40,20 +40,5 @@
       </div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="{% static 'js/chart.js' %}"></script>
-      <script>
-
-        endpoint = "{{ endpoint|safe }}"
-
-        $.ajax({
-          method: "GET",
-          url: endpoint,
-          success: function(data) {
-            plot(data);
-          },
-          error: function(error_data) {
-            console.log(error_data);
-          }
-        })
-      </script>
+      <script data-endpoint="{{ endpoint }}" src="{% static 'js/chart.js' %}" defer></script>
 {% endblock main %}

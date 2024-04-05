@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
 
   database:
@@ -55,7 +57,7 @@ services:
       - 5555:5555
 
   app:
-    container_name: pyheat1d_web
+    container_name: pyheat1d_web_dev
     build:
       dockerfile: ./Dockerfile.dev
     image: pyheat1d_web:dev

@@ -187,4 +187,4 @@ def edit_simulation_form(request, pk):
 
 
 def redirect_flower(request):
-    return HttpResponseRedirect("http://localhost:5555")
+    return HttpResponseRedirect("http://localhost:/flower/")

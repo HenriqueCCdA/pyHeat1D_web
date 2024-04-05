@@ -1,0 +1,97 @@
+version: '3.9'
+
+services:
+
+  proxy:
+    container_name: pyheat1d-web-proxy
+    restart: 'no'
+    build:
+      context: nginx
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./staticfiles:/var/www/site/staticfiles
+    ports:
+      - 80:80
+
+  database:
+    container_name: pyheat1d-web-db
+    image: postgres:16.1-alpine
+    restart: 'no'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - LC_ALL=C.UTF-8
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=pyheat1d_web_user
+      - POSTGRES_DB=pyheat1d_web_db
+
+  broker:
+    container_name: pyheat1d-web-broker
+    image: redis:7.2-alpine
+
+  worker_1:
+    container_name: pyheat1d-web-worker-1
+    image: pyheat1d_web:1.0
+    command: celery -A pyheat1d_web.celery worker  -n 'worker@1' --concurrency=2 -l INFO
+    volumes:
+      - analisys:/home/app/analisys/
+    environment:
+      SECRET_KEY: "Sua chave secreta aqui"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
+    depends_on:
+      - broker
+
+  worker_2:
+    container_name: pyheat1d-web-worker-2
+    image: pyheat1d_web:1.0
+    command: celery -A pyheat1d_web.celery worker -n 'worker@2' --concurrency=2 -l INFO
+    volumes:
+      - analisys:/home/app/analisys/
+    environment:
+      SECRET_KEY: "Sua chave secreta aqui"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
+    depends_on:
+      - broker
+
+  flower:
+    container_name: pyheat1d-web-flower
+    image: pyheat1d_web:1.0
+    command: celery --broker=redis://broker:6379/0 flower --port=5555 --url-prefix=flower
+    depends_on:
+      - broker
+    ports:
+      - 5555:5555
+
+  app:
+    container_name: pyheat1d-web-prod
+    build:
+      dockerfile: ./Dockerfile.prod
+    image: pyheat1d_web:1.0
+    command: >
+      sh -c "python3 manage.py collectstatic --noinput --clear;
+      gunicorn pyheat1d_web.wsgi --workers 3 --bind 0.0.0.0:8000 --log-file=- --access-logfile=-"
+
+
+    restart: 'no'
+    volumes:
+      - analisys:/home/app/analisys/
+    environment:
+      DEBUG: True
+      SECRET_KEY: "Sua chave secreta aqui"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      DATABASE_URL: postgres://pyheat1d_web_user:123456@database:5432/pyheat1d_web_db
+      CELERY_BROKER_URL: redis://broker:6379
+      CELERY_RESULT_BACKEND: redis://broker:6379
+    depends_on:
+      - database
+      - broker
+
+volumes:
+  pg_data:
+  analisys:
